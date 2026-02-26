@@ -1,0 +1,299 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Jarvis Smart Fridge - Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f0f2f5;
+        margin: 0;
+        color: #333;
+      }
+      @media (min-width: 769px) {
+        body {
+          zoom: 110%;
+        }
+      }
+      #auth-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        padding: 20px;
+        box-sizing: border-box;
+        overflow: hidden;
+        position: relative;
+      }
+      .auth-container {
+        background: white;
+        padding: 2.5rem;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        width: 100%;
+        max-width: 400px;
+      }
+      .auth-box {
+        text-align: center;
+      }
+      input {
+        width: 100%;
+        padding: 12px;
+        margin: 8px 0;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        box-sizing: border-box;
+      }
+      button {
+        width: 100%;
+        padding: 12px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        margin-top: 15px;
+        font-weight: 600;
+        transition: 0.2s;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      button:disabled {
+        background-color: #a0cfff;
+      }
+      .secondary {
+        background-color: #6c757d;
+        margin-top: 10px;
+      }
+      .secondary:hover {
+        background-color: #5a6268;
+      }
+      .error {
+        color: #dc3545;
+        display: none;
+        margin-top: 10px;
+        background: #ffe6e6;
+        padding: 8px;
+        border-radius: 4px;
+      }
+      .success {
+        color: #28a745;
+        display: none;
+        margin-top: 10px;
+        background: #e6ffed;
+        padding: 8px;
+        border-radius: 4px;
+      }
+      .spinner {
+        display: none;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: #fff;
+        animation: spin 1s infinite;
+        margin: 0 auto;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .toggle-link {
+        color: #007bff;
+        cursor: pointer;
+        display: block;
+        margin-top: 15px;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="auth-wrapper">
+      <div class="auth-container">
+        <div id="login-view" class="auth-box">
+          <h2>Jarvis Assistant</h2>
+          <h3 style="color: #666; font-size: 16px; margin-top: -10px">
+            System Login
+          </h3>
+          <input type="text" id="login-user" placeholder="Username" />
+          <input type="password" id="login-pass" placeholder="Password" />
+          <button onclick="handleAuth('login')" id="btn-login">
+            <span class="btn-text">Login</span>
+            <div class="spinner"></div>
+          </button>
+          <p id="login-msg" class="error"></p>
+          <div
+            style="
+              margin-top: 20px;
+              display: flex;
+              justify-content: space-between;
+            "
+          >
+            <span
+              class="toggle-link"
+              onclick="showAuthView('change-pass-view')"
+              style="margin: 0"
+              >Change Password?</span
+            >
+            <span
+              class="toggle-link"
+              onclick="showAuthView('signup-view')"
+              style="margin: 0"
+              >Sign Up</span
+            >
+          </div>
+        </div>
+
+        <div id="signup-view" class="auth-box" style="display: none">
+          <h2>Create Account</h2>
+          <input type="text" id="signup-user" placeholder="Choose Username" />
+          <input
+            type="password"
+            id="signup-pass"
+            placeholder="Choose Password"
+          />
+          <button onclick="handleAuth('signup')" id="btn-signup">
+            <span class="btn-text">Sign Up</span>
+            <div class="spinner"></div>
+          </button>
+          <button class="secondary" onclick="showAuthView('login-view')">
+            Back
+          </button>
+          <p id="signup-msg" class="error"></p>
+        </div>
+
+        <div id="change-pass-view" class="auth-box" style="display: none">
+          <h2>Change Password</h2>
+          <input type="text" id="cp-user" placeholder="Username" />
+          <input type="password" id="cp-old" placeholder="Old Password" />
+          <input type="password" id="cp-new" placeholder="New Password" />
+          <button onclick="handleAuth('change_password')" id="btn-cp">
+            <span class="btn-text">Update</span>
+            <div class="spinner"></div>
+          </button>
+          <button class="secondary" onclick="showAuthView('login-view')">
+            Cancel
+          </button>
+          <p id="cp-msg" class="error"></p>
+        </div>
+      </div>
+
+      <div
+        style="
+          position: absolute;
+          bottom: 20px;
+          width: 100%;
+          text-align: center;
+          color: #7f8c8d;
+          font-size: 14px;
+        "
+      >
+        Version 4
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script>
+      const API_URL =
+        "https://script.google.com/macros/s/AKfycbwR3LH7qkeNNNZgEhOSMFqXZcO9xyVF7DiQau7gDxcTJ6ljtgD4EwrIm8tmC-B-fMpMag/exec";
+
+      function showAuthView(viewId) {
+        $(".auth-box").hide();
+        $("#" + viewId).show();
+        $(".error, .success").hide().text("");
+        $("input").val("");
+      }
+
+      function handleAuth(action) {
+        let payload = { action: action };
+        let msgBox, btn;
+
+        if (action === "login") {
+          payload.username = $("#login-user").val();
+          payload.password = $("#login-pass").val();
+          msgBox = $("#login-msg");
+          btn = $("#btn-login");
+        } else if (action === "signup") {
+          payload.username = $("#signup-user").val();
+          payload.password = $("#signup-pass").val();
+          msgBox = $("#signup-msg");
+          btn = $("#btn-signup");
+        } else if (action === "change_password") {
+          payload.username = $("#cp-user").val();
+          payload.old_password = $("#cp-old").val();
+          payload.new_password = $("#cp-new").val();
+          msgBox = $("#cp-msg");
+          btn = $("#btn-cp");
+        }
+
+        msgBox.hide();
+        btn
+          .prop("disabled", true)
+          .find(".btn-text")
+          .hide()
+          .end()
+          .find(".spinner")
+          .show();
+
+        $.ajax({
+          url: API_URL,
+          method: "POST",
+          data: JSON.stringify(payload),
+          contentType: "text/plain",
+          success: function (response) {
+            btn
+              .prop("disabled", false)
+              .find(".btn-text")
+              .show()
+              .end()
+              .find(".spinner")
+              .hide();
+            let res;
+            try {
+              res =
+                typeof response === "object" ? response : JSON.parse(response);
+            } catch (e) {
+              msgBox
+                .addClass("error")
+                .text("Server returned invalid data. Check Console.")
+                .show();
+              return;
+            }
+
+            if (res.status === "success") {
+              if (action === "login" || action === "signup") {
+                if (action === "signup")
+                  alert("Account created! Logging you in...");
+
+                // Session Storage added to persist credentials across the separated pages
+                sessionStorage.setItem("currentUser", payload.username);
+                sessionStorage.setItem("currentPass", payload.password);
+                window.location.href = "inventory.html";
+              } else if (action === "change_password") {
+                alert("Password changed! Please login again.");
+                showAuthView("login-view");
+              }
+            } else {
+              msgBox.addClass("error").text(res.message).show();
+            }
+          },
+          error: function () {
+            btn
+              .prop("disabled", false)
+              .find(".btn-text")
+              .show()
+              .end()
+              .find(".spinner")
+              .hide();
+            msgBox
+              .addClass("error")
+              .text("Connection failed. See console for details.")
+              .show();
+          },
+        });
+      }
+    </script>
+  </body>
+</html>

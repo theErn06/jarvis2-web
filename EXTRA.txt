@@ -1,0 +1,4 @@
+wake_phrases = [
+                    "jarvis", "jervis", "travis", "garbage", "jar", "hey joe",
+                    "jobbies", "jobbie", "chavies", "java", "drop is", "joggies", "jiaobies", "ciao peace"
+                ]
