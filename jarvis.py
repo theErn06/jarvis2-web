@@ -599,11 +599,12 @@ class JarvisAPIHandler(SimpleHTTPRequestHandler):
         super().end_headers()
 
     def do_OPTIONS(self):
-        self.send_response(204)
-        self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-        self.send_header('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, Accept, Origin')
-        super().end_headers()
+        # Allow GitHub Pages to bypass security restrictions
+        self.send_response(200)
+        self.send_header('Access-Control-Allow-Origin', '*') # Allows your GitHub link
+        self.send_header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+        self.end_headers()
 
     def do_GET(self):
         # Auto-redirect the root IP to index.html
@@ -660,8 +661,8 @@ class JarvisAPIHandler(SimpleHTTPRequestHandler):
 
             self.send_response(200)
             self.send_header('Content-type', 'application/json')
-            self.send_header('Access-Control-Allow-Origin', '*')
-            super().end_headers()
+            self.send_header('Access-Control-Allow-Origin', '*') # CRITICAL
+            self.end_headers()
             self.wfile.write(json.dumps(resp).encode())
 
 # ==========================================
@@ -674,20 +675,24 @@ if __name__ == "__main__":
     threading.Thread(target=door_reminder_watchdog, daemon=True).start()
 
     def start_server():
-        # Ensure the server looks for HTML files in the exact folder this script is in
         os.chdir(SCRIPT_DIR)
         
+        # Enhanced IP detection to ensure we don't grab 127.0.0.1
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            s.settimeout(0)
             s.connect(("8.8.8.8", 80))
             local_ip = s.getsockname()[0]
             s.close()
         except Exception:
             local_ip = "127.0.0.1"
             
-        print(f"   [🌐] Unified Web Server & API active!")
-        print(f"   [📱] ON YOUR PHONE, OPEN THIS EXACT LINK: http://{local_ip}:5000")
+        print(f"\n   [🌐] Unified Web Server & API active!")
+        print(f"   [📱] STEP 1: Connect phone to the SAME Wi-Fi.")
+        print(f"   [📱] STEP 2: Open this link: http://{local_ip}:5000")
+        print(f"   [📱] STEP 3: If using GitHub version, enable 'Insecure Content' in site settings.")
 
+        # Ensure '0.0.0.0' is used to listen to the WHOLE network, not just the PC
         server = ThreadingHTTPServer(('0.0.0.0', 5000), JarvisAPIHandler)
         server.serve_forever()
         
