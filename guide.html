@@ -66,46 +66,41 @@
             </p>
           </div>
 
-          <div class="card info-card" style="text-align: left">
-            <h3>Hardware & Arduino Guide</h3>
+          <div class="card info-card" style="text-align: left; border-left: 5px solid #3498db;">
+            <h3 style="color: #2980b9;">How to Connect to Jarvis</h3>
             <ul class="feature-list">
               <li>
-                <div class="feature-icon">🔌</div>
+                <div class="feature-icon">1️⃣</div>
                 <div class="feature-text">
-                  <h4>LCD Display Panel</h4>
-                  <p>
-                    The Arduino Uno is connected to an LCD display that provides
-                    real-time feedback. It shows <em>"Listening..."</em> when
-                    waiting for commands, <em>"Recording..."</em> when you
-                    speak, and prints Jarvis's text responses directly on the
-                    screen.
-                  </p>
+                  <h4>Open the Jarvis Interface</h4>
+                  <p>Open the sidebar menu (☰) and click or tap the 🤖 <strong>Jarvis</strong> icon at the bottom of the navigation list.</p>
                 </div>
               </li>
               <li>
-                <div class="feature-icon">🚪</div>
+                <div class="feature-icon">2️⃣</div>
                 <div class="feature-text">
-                  <h4>Smart Door Sensor</h4>
-                  <p>
-                    A physical sensor tracks when the fridge door is opened or
-                    closed. If the door is left open for more than 30 seconds,
-                    the hardware triggers a watchdog reminder and Jarvis will
-                    audibly warn you to close the fridge to save energy and
-                    prevent food spoilage.
-                  </p>
+                  <h4>Find the IP Address</h4>
+                  <p>If you are accessing the dashboard from your phone, a prompt will ask for an IP address. Look directly at your physical fridge's <strong>Arduino LCD Display</strong>. It will show an IP address (e.g., <code>192.168.1.10</code>). Type this exact sequence of numbers into the prompt.</p>
+                </div>
+              </li>
+              <li>
+                <div class="feature-icon">3️⃣</div>
+                <div class="feature-text">
+                  <h4>Return to the Dashboard</h4>
+                  <p>When you are finished chatting with Jarvis, simply tap the red <strong>"← Go Back"</strong> button at the top left of the screen. This will safely close the secure direct connection and instantly return you to the main dashboard.</p>
                 </div>
               </li>
             </ul>
           </div>
 
           <div class="card info-card" style="text-align: left">
-            <h3>Jarvis Chat Interface</h3>
+            <h3>Jarvis Chat Controls</h3>
             <ul class="feature-list">
               <li>
                 <div class="feature-icon">🎙️</div>
                 <div class="feature-text">
                   <h4>Voice Commands</h4>
-                  <p>Tap the green microphone icon to activate voice recognition. The icon will pulse red while listening. Speak naturally (e.g., <em>"Add two apples"</em>), and Jarvis will process your command via Edge-LLM.</p>
+                  <p>Tap the green microphone icon to activate voice recognition. The icon will pulse red while listening. Speak naturally (e.g., <em>"Add two apples"</em>).</p>
                 </div>
               </li>
               <li>
@@ -115,11 +110,21 @@
                   <p>If you are in a noisy environment, you can type your command directly into the input bar and press the blue Send arrow.</p>
                 </div>
               </li>
+            </ul>
+          </div>
+
+          <div class="card info-card" style="text-align: left">
+            <h3>Hardware Status</h3>
+            <ul class="feature-list">
               <li>
-                <div class="feature-icon">🔗</div>
+                <div class="feature-icon">🚪</div>
                 <div class="feature-text">
-                  <h4>Direct Link (Mobile Mode)</h4>
-                  <p>When accessing Jarvis from a mobile phone via GitHub, the system isolates the chat in a secure local browser tab to bypass mixed-content blocks. Once finished, use the red <strong>"← Go Back"</strong> button to return to the main dashboard.</p>
+                  <h4>Smart Door Sensor</h4>
+                  <p>
+                    A physical sensor tracks when the fridge door is opened or
+                    closed. If the door is left open for more than 30 seconds,
+                    Jarvis will audibly warn you to close the fridge to save energy.
+                  </p>
                 </div>
               </li>
             </ul>
@@ -157,10 +162,14 @@
       function openJarvisTab(e) {
           e.preventDefault();
           let currentHost = window.location.hostname;
+          
+          // Auto-route if running locally on the PC
           if (currentHost === 'localhost' || currentHost === '127.0.0.1' || /^(192\.168|10\.|172\.)/.test(currentHost)) {
               window.location.href = "jarvis.html";
               return;
           }
+          
+          // Prompt for Mobile/GitHub connection
           let savedIp = localStorage.getItem("jarvis_ip");
           let targetIp = prompt("Jarvis Direct Link:\n\nEnter the IP address shown on the Arduino Display (e.g., 192.168.1.10):", savedIp || "");
 
