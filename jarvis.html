@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
     />
     <title>Jarvis Smart Fridge - Jarvis</title>
     <link rel="stylesheet" href="style.css" />
@@ -77,11 +77,19 @@
                 </div>
               </div>
 
-              <div class="chat-controls">
+              <form
+                id="chat-form"
+                class="chat-controls"
+                onsubmit="
+                  event.preventDefault();
+                  sendText();
+                "
+              >
                 <input
                   type="text"
                   id="chat-input"
                   placeholder="Message Jarvis..."
+                  autocomplete="off"
                 />
 
                 <button
@@ -109,12 +117,7 @@
                   </svg>
                 </button>
 
-                <button
-                  type="button"
-                  class="icon-btn send-btn"
-                  id="send-btn"
-                  onclick="sendText()"
-                >
+                <button type="submit" class="icon-btn send-btn" id="send-btn">
                   <svg
                     viewBox="0 0 24 24"
                     width="22"
@@ -130,9 +133,11 @@
                     <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                   </svg>
                 </button>
-              </div>
+              </form>
             </div>
           </div>
+
+          <div class="version-text">Version 4</div>
         </div>
       </div>
     </div>
