@@ -20,7 +20,6 @@ from datetime import datetime, timedelta
 from faster_whisper import WhisperModel
 from typing import List, Dict, Any, Tuple
 
-# UPGRADE: SimpleHTTPRequestHandler turns Python into a full web server!
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 
 # ==========================================
@@ -391,32 +390,17 @@ def get_quantity_from_speech(text: str) -> int:
         if f" {word} " in f" {text} ": return num
     return 1 
 
-# Prevents pyttsx3 from locking the HTTP server threads
-tts_queue = queue.Queue()
-
-def tts_worker():
+def speak(text: str) -> None:
+    text = text.replace(" pcs", " pieces")
+    send_to_lcd(f"JARVIS: {text}")
     try:
         engine = pyttsx3.init()
         engine.setProperty("rate", 190) 
         engine.setProperty("volume", 0.9)
+        engine.say(text)
+        engine.runAndWait()
     except Exception:
-        engine = None
-    
-    while True:
-        text = tts_queue.get()
-        if engine and text:
-            try:
-                engine.say(text)
-                engine.runAndWait()
-            except Exception: pass
-        tts_queue.task_done()
-
-threading.Thread(target=tts_worker, daemon=True).start()
-
-def speak(text: str) -> None:
-    text = text.replace(" pcs", " pieces")
-    send_to_lcd(f"JARVIS: {text}")
-    tts_queue.put(text)
+        pass
 
 # ==========================================
 # SPEECH RECOGNITION (VAD + WHISPER)
@@ -621,7 +605,7 @@ class JarvisAPIHandler(SimpleHTTPRequestHandler):
             super().do_GET()
 
     def do_POST(self):
-        global jarvis_awake, conversation_ended_time
+        global jarvis_awake, conversation_ended_time, lcd_busy_until
         
         if self.path == "/chat":
             try:
@@ -635,6 +619,8 @@ class JarvisAPIHandler(SimpleHTTPRequestHandler):
 
             jarvis_awake = True
             conversation_ended_time = None
+            lcd_busy_until = 0 # Release screen lock so you can see subtitle
+            
             text_clean = clean_stt_text(command)
             send_to_lcd(f"WEB: {text_clean}")
             print(f"\n   [🌐 Web API Received]: {text_clean}")
@@ -670,40 +656,41 @@ class JarvisAPIHandler(SimpleHTTPRequestHandler):
 if __name__ == "__main__":
     print(f"--- Jarvis Unified Server ---")
     
+    # 1. Thread the hardware watchers
     threading.Thread(target=listen_door_events, daemon=True).start()
     threading.Thread(target=door_reminder_watchdog, daemon=True).start()
 
+    # 2. Extract Local IP
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.settimeout(0)
+        s.connect(("8.8.8.8", 80))
+        local_ip = s.getsockname()[0]
+        s.close()
+    except Exception:
+        local_ip = "127.0.0.1"
+
+    # 3. Create the server function and push it to a background thread so it NEVER blocks
     def start_server():
         os.chdir(SCRIPT_DIR)
-        
-        # Enhanced IP detection to ensure we don't grab 127.0.0.1
-        try:
-            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            s.settimeout(0)
-            s.connect(("8.8.8.8", 80))
-            local_ip = s.getsockname()[0]
-            s.close()
-        except Exception:
-            local_ip = "127.0.0.1"
-            
         print(f"\n   [🌐] Unified Web Server & API active!")
-        print(f"   [📱] STEP 1: Connect phone to the SAME Wi-Fi.")
-        print(f"   [📱] STEP 2: Open this link: http://{local_ip}:5000")
-        print(f"   [📱] STEP 3: If using GitHub version, enable 'Insecure Content' in site settings.")
-
-        # Ensure '0.0.0.0' is used to listen to the WHOLE network, not just the PC
+        print(f"   [📱] Your PC IP Address is: {local_ip}")
         server = ThreadingHTTPServer(('0.0.0.0', 5000), JarvisAPIHandler)
         server.serve_forever()
         
     threading.Thread(target=start_server, daemon=True).start()
 
+    # 4. Microphone Check
     try:
         CURRENT_MIC_NAME = sd.query_devices(kind='input')['name']
         print(f"   [MIC] Connected to: {CURRENT_MIC_NAME}")
     except Exception:
         pass
 
+    # 5. Boot sequence: Speak first, THEN display the IP on the Arduino
     speak("System Initialized.")
+    send_to_lcd(f"IP: {local_ip}")
+    lcd_busy_until = time.time() + 30.0 # Lock screen for 30 seconds so you can read it!
     
     try:
         while True:
@@ -712,7 +699,7 @@ if __name__ == "__main__":
             if VOICE_MODE:
                 text = listen_dynamic()
             else:
-                send_to_lcd("Mode: TEXT")
+                if time.time() >= lcd_busy_until: send_to_lcd("Mode: TEXT")
                 try: 
                     text = input("\n   👉 Type here: ")
                 except EOFError: 
@@ -722,6 +709,8 @@ if __name__ == "__main__":
                 if VOICE_MODE:
                     if time.time() >= lcd_busy_until: send_to_lcd("Listening..." if jarvis_awake else "Awaiting...")
                 continue
+            
+            lcd_busy_until = 0 # Immediately release screen lock when interaction starts
             
             text_clean = clean_stt_text(text)
             text_lower = text_clean.lower()
