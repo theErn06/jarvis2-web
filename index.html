@@ -7,86 +7,89 @@
     <link rel="stylesheet" href="style.css" />
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
   </head>
-  <body style="display: flex; justify-content: center; align-items: center">
-    <div class="card auth-card" id="login-view">
-      <h2>Jarvis Assistant</h2>
-      <div class="subtitle">System Login</div>
-
-      <div class="input-group">
-        <input type="text" id="login-user" placeholder="Username" />
+  <body class="auth-body">
+    <div class="auth-wrapper animate-fade-in">
+      <div class="auth-card" id="login-view">
+        <h2>Jarvis Assistant</h2>
+        <div class="subtitle">System Login</div>
+        <div class="input-group">
+          <input type="text" id="login-user" placeholder="Username" />
+        </div>
+        <div class="input-group">
+          <input type="password" id="login-pass" placeholder="Password" />
+        </div>
+        <button
+          class="primary-btn"
+          onclick="handleAuth('login')"
+          id="btn-login"
+        >
+          <span class="btn-text">Login</span>
+          <div class="spinner"></div>
+        </button>
+        <div class="message error" id="login-msg"></div>
+        <div class="auth-actions">
+          <span onclick="showAuthView('change-pass-view')"
+            >Change Password?</span
+          ><span onclick="showAuthView('signup-view')">Sign Up</span>
+        </div>
+        <div style="margin-top: 30px; color: #7f8c8d; font-size: 14px">
+          Version 4
+        </div>
       </div>
-      <div class="input-group">
-        <input type="password" id="login-pass" placeholder="Password" />
+
+      <div class="auth-card" id="signup-view" style="display: none">
+        <h2>Create Account</h2>
+        <div class="subtitle">Register New User</div>
+        <div class="input-group">
+          <input type="text" id="signup-user" placeholder="Choose Username" />
+        </div>
+        <div class="input-group">
+          <input
+            type="password"
+            id="signup-pass"
+            placeholder="Choose Password"
+          />
+        </div>
+        <button
+          class="primary-btn"
+          onclick="handleAuth('signup')"
+          id="btn-signup"
+        >
+          <span class="btn-text">Sign Up</span>
+          <div class="spinner"></div>
+        </button>
+        <button class="text-btn" onclick="showAuthView('login-view')">
+          Back to Login
+        </button>
+        <div class="message error" id="signup-msg"></div>
       </div>
 
-      <button class="primary-btn" onclick="handleAuth('login')" id="btn-login">
-        <span class="btn-text">Login</span>
-        <div class="spinner"></div>
-      </button>
-      <div class="message error" id="login-msg"></div>
-
-      <div class="auth-actions">
-        <span onclick="showAuthView('change-pass-view')">Change Password?</span>
-        <span onclick="showAuthView('signup-view')">Sign Up</span>
-      </div>
-      <div style="margin-top: 30px; color: #7f8c8d; font-size: 14px">
-        Version 4
+      <div class="auth-card" id="change-pass-view" style="display: none">
+        <h2>Change Password</h2>
+        <div class="subtitle">Update Credentials</div>
+        <div class="input-group">
+          <input type="text" id="cp-user" placeholder="Username" />
+        </div>
+        <div class="input-group">
+          <input type="password" id="cp-old" placeholder="Old Password" />
+        </div>
+        <div class="input-group">
+          <input type="password" id="cp-new" placeholder="New Password" />
+        </div>
+        <button
+          class="primary-btn"
+          onclick="handleAuth('change_password')"
+          id="btn-cp"
+        >
+          <span class="btn-text">Update</span>
+          <div class="spinner"></div>
+        </button>
+        <button class="text-btn" onclick="showAuthView('login-view')">
+          Cancel
+        </button>
+        <div class="message error" id="cp-msg"></div>
       </div>
     </div>
-
-    <div class="card auth-card" id="signup-view" style="display: none">
-      <h2>Create Account</h2>
-      <div class="subtitle">Register New User</div>
-
-      <div class="input-group">
-        <input type="text" id="signup-user" placeholder="Choose Username" />
-      </div>
-      <div class="input-group">
-        <input type="password" id="signup-pass" placeholder="Choose Password" />
-      </div>
-
-      <button
-        class="primary-btn"
-        onclick="handleAuth('signup')"
-        id="btn-signup"
-      >
-        <span class="btn-text">Sign Up</span>
-        <div class="spinner"></div>
-      </button>
-      <button class="text-btn" onclick="showAuthView('login-view')">
-        Back to Login
-      </button>
-      <div class="message error" id="signup-msg"></div>
-    </div>
-
-    <div class="card auth-card" id="change-pass-view" style="display: none">
-      <h2>Change Password</h2>
-      <div class="subtitle">Update Credentials</div>
-
-      <div class="input-group">
-        <input type="text" id="cp-user" placeholder="Username" />
-      </div>
-      <div class="input-group">
-        <input type="password" id="cp-old" placeholder="Old Password" />
-      </div>
-      <div class="input-group">
-        <input type="password" id="cp-new" placeholder="New Password" />
-      </div>
-
-      <button
-        class="primary-btn"
-        onclick="handleAuth('change_password')"
-        id="btn-cp"
-      >
-        <span class="btn-text">Update</span>
-        <div class="spinner"></div>
-      </button>
-      <button class="text-btn" onclick="showAuthView('login-view')">
-        Cancel
-      </button>
-      <div class="message error" id="cp-msg"></div>
-    </div>
-
     <script>
       const API_URL =
         "https://script.google.com/macros/s/AKfycbwR3LH7qkeNNNZgEhOSMFqXZcO9xyVF7DiQau7gDxcTJ6ljtgD4EwrIm8tmC-B-fMpMag/exec";
@@ -123,20 +126,15 @@
           .hide()
           .end()
           .find(".spinner")
-          .css("display", "block");
+          .show();
         $.ajax({
           url: API_URL,
           method: "POST",
           data: JSON.stringify(payload),
           contentType: "text/plain",
           success: function (response) {
-            btn
-              .prop("disabled", false)
-              .find(".btn-text")
-              .show()
-              .end()
-              .find(".spinner")
-              .hide();
+            btn.prop("disabled", false).find(".spinner").hide();
+            btn.find(".btn-text").show();
             let res;
             try {
               res =
@@ -163,11 +161,11 @@
           error: function () {
             btn
               .prop("disabled", false)
-              .find(".btn-text")
-              .show()
-              .end()
               .find(".spinner")
-              .hide();
+              .hide()
+              .end()
+              .find(".btn-text")
+              .show();
             msgBox.text("Connection failed.");
           },
         });
