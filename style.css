@@ -15,15 +15,14 @@
 
 * { box-sizing: border-box; }
 
-body {
+body, html {
     margin: 0;
+    padding: 0;
     font-family: 'Segoe UI', Tahoma, sans-serif;
     background-color: var(--bg-body);
     color: var(--text-dark);
-    /* Prevents body from bouncing around on mobile */
-    overflow: hidden; 
     height: 100vh;
-    height: 100dvh;
+    overflow: hidden; /* Prevents PC double-scrollbars */
 }
 
 /* =========================================
@@ -38,7 +37,7 @@ body {
 /* =========================================
    GLOBAL LAYOUT (PC DASHBOARD)
    ========================================= */
-#dashboard-wrapper { display: flex; height: 100vh; height: 100dvh; width: 100vw; }
+#dashboard-wrapper { display: flex; height: 100%; width: 100%; }
 
 /* --- Sidebar --- */
 .sidebar { 
@@ -47,13 +46,11 @@ body {
     color: white; 
     display: flex; 
     flex-direction: column; 
-    transition: width 0.3s ease, transform 0.3s ease; 
-    z-index: 1001; 
+    transition: width 0.3s ease; 
+    z-index: 1000; 
     overflow: hidden; 
     white-space: nowrap; 
     flex-shrink: 0;
-    height: 100vh;
-    height: 100dvh; /* Forces full vertical height */
 }
 @media (min-width: 769px) {
     .sidebar:hover { width: var(--sidebar-width-open); box-shadow: 4px 0 15px rgba(0,0,0,0.1); }
@@ -78,90 +75,19 @@ body {
 .logout-item { color: #e74c3c; }
 
 /* --- Main Content --- */
-.main-content { 
-    flex: 1; 
-    display: flex; 
-    flex-direction: column; 
-    height: 100vh; 
-    height: 100dvh;
-    overflow-y: auto; 
-    background: #f8f9fa; 
-}
-.content-wrapper { width: 100%; max-width: 1100px; margin: 0 auto; padding: 25px; display: flex; flex-direction: column; flex: 1; }
+.main-content { flex: 1; display: flex; flex-direction: column; height: 100%; overflow-y: auto; background: #f8f9fa; position: relative; }
+.content-wrapper { width: 100%; max-width: 1100px; margin: 0 auto; padding: 25px; display: flex; flex-direction: column; flex: 1; min-height: 0; }
 
-.mobile-header { display: none; padding: 15px 20px; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.05); align-items: center; flex-shrink: 0; height: var(--header-height); }
-.menu-btn { font-size: 1.5rem; background: none; border: none; cursor: pointer; color: var(--text-dark); }
+.mobile-header { display: none; padding: 0 20px; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.05); align-items: center; flex-shrink: 0; height: var(--header-height); }
+.menu-btn { font-size: 1.5rem; background: none; border: none; cursor: pointer; color: var(--text-dark); padding: 0;}
 .logo-text { margin-left: 15px; font-weight: bold; font-size: 1.2rem; color: var(--primary); }
 
-.page-title { text-align: left; margin: 0 0 20px 0; font-size: 1.8rem; color: var(--text-dark); flex-shrink: 0; }
+.page-title { text-align: left; margin: 0 0 20px 0; font-size: 1.8rem; color: var(--text-dark); flex-shrink: 0;}
+
+.version-text { text-align: center; padding: 20px; color: #7f8c8d; font-size: 14px; margin-top: auto; flex-shrink: 0;}
 
 /* =========================================
-   JARVIS CHAT UI (Strict Flexbox for Mobile)
-   ========================================= */
-.jarvis-wrapper { 
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    width: 100%; 
-    flex: 1; 
-    min-height: 0; /* Critical for keeping chat inside the screen */
-}
-.chat-container { 
-    width: 100%; 
-    max-width: 800px; 
-    height: 100%; /* Uses available height */
-    background: #fff; 
-    border-radius: 12px; 
-    box-shadow: var(--shadow); 
-    display: flex; 
-    flex-direction: column; 
-    overflow: hidden; 
-    border: 1px solid #eee; 
-}
-
-/* History scrolls, inputs stay pinned */
-.chat-history { flex: 1; padding: 20px; overflow-y: auto; background: #fdfdfd; display: flex; flex-direction: column; }
-
-.chat-msg { display: flex; margin-bottom: 15px; max-width: 85%; align-items: flex-end; }
-.user-msg { align-self: flex-end; flex-direction: row-reverse; }
-.bot-msg { align-self: flex-start; }
-
-.chat-avatar { width: 35px; height: 35px; border-radius: 50%; margin-right: 10px; background: #fff; flex-shrink: 0; }
-.user-msg .chat-avatar { margin-right: 0; margin-left: 10px; }
-
-.msg-content { padding: 12px 16px; border-radius: 15px; font-size: 15px; line-height: 1.4; position: relative; }
-.user-msg .msg-content { background: var(--primary); color: #fff; border-bottom-right-radius: 2px; }
-.bot-msg .msg-content { background: #e9ecef; color: #333; border-bottom-left-radius: 2px; }
-.msg-label { font-size: 11px; font-weight: bold; margin-bottom: 4px; opacity: 0.8; }
-
-.chat-controls { 
-    display: flex; 
-    padding: 12px 15px; 
-    background: #fff; 
-    border-top: 1px solid #eee; 
-    gap: 10px; 
-    align-items: center; 
-    flex-shrink: 0; /* Prevents controls from disappearing on mobile */
-    z-index: 10;
-}
-
-/* 16px prevents mobile iOS from zooming in */
-.chat-controls input { flex: 1; padding: 12px 20px; border: 1px solid #ccc; border-radius: 25px; outline: none; font-size: 16px; min-width: 0; }
-.chat-controls input:focus { border-color: var(--primary); }
-
-.icon-btn { 
-    width: 44px; height: 44px; border-radius: 50%; border: none; 
-    display: flex; justify-content: center; align-items: center; 
-    cursor: pointer; transition: 0.2s; flex-shrink: 0; 
-}
-.mic-btn { background: #e8f5e9; color: #27ae60; }
-.mic-btn.active { background: #ffebee; color: #e74c3c; animation: pulse 1s infinite; }
-.send-btn { background: var(--primary); color: white; }
-
-@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-
-/* =========================================
-   LOGIN PAGE & OTHER COMPONENTS
+   LOGIN PAGE (index.html)
    ========================================= */
 .auth-body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: var(--bg-body); margin: 0; }
 .auth-wrapper { width: 100%; display: flex; justify-content: center; align-items: center; padding: 20px; }
@@ -171,13 +97,22 @@ body {
 .input-group { margin-bottom: 15px; }
 .input-group input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; outline: none; transition: border 0.3s; }
 .input-group input:focus { border-color: var(--primary); }
-.primary-btn { width: 100%; height: 48px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 10px; display: flex; justify-content: center; align-items: center; transition: background 0.3s; }
+
+.primary-btn { width: 100%; height: 48px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 10px; display: flex; justify-content: center; align-items: center; transition: background 0.3s; touch-action: manipulation;}
 .primary-btn:hover { background: var(--primary-dark); }
+.primary-btn:disabled { background: #ccc; cursor: not-allowed; }
+
 .text-btn { background: none; border: none; color: #777; margin-top: 15px; cursor: pointer; text-decoration: underline; width: 100%; font-size: 14px;}
 .auth-actions { display: flex; justify-content: space-between; margin-top: 20px; font-size: 0.9rem; color: var(--primary); cursor: pointer; }
 .message { margin-top: 10px; font-size: 0.9rem; min-height: 20px; }
 .message.error { color: #e74c3c; }
 
+.spinner { display: none; width: 22px; height: 22px; border: 3px solid rgba(255,255,255,0.4); border-radius: 50%; border-top-color: #fff; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* =========================================
+   TABLES & CARDS
+   ========================================= */
 .table-responsive { overflow-x: auto; width: 100%; background: #fff; padding: 20px; border-radius: 10px; box-shadow: var(--shadow); }
 .mobile-controls { display: none; }
 table.dataTable thead th { text-align: left; color: #555; border-bottom: 2px solid #ddd; padding: 15px 10px; background: #fff; }
@@ -196,30 +131,103 @@ table.dataTable tbody td { padding: 15px 10px; border-bottom: 1px solid #f0f0f0;
 .tag { background: #e1f0fa; color: var(--primary); padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; }
 
 /* =========================================
-   MOBILE RESPONSIVENESS
+   JARVIS CHAT UI
    ========================================= */
-.sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; opacity: 0; transition: opacity 0.3s; }
+.jarvis-wrapper { display: flex; flex-direction: column; align-items: center; width: 100%; flex: 1; min-height: 0; }
+.chat-container { width: 100%; height: 100%; background: #fff; border-radius: 12px; box-shadow: var(--shadow); display: flex; flex-direction: column; overflow: hidden; border: 1px solid #eee; }
+.chat-history { flex: 1; padding: 20px; overflow-y: auto; background: #fdfdfd; display: flex; flex-direction: column; }
+
+.chat-msg { display: flex; margin-bottom: 15px; max-width: 85%; align-items: flex-end; }
+.user-msg { align-self: flex-end; flex-direction: row-reverse; }
+.bot-msg { align-self: flex-start; }
+
+.chat-avatar { width: 35px; height: 35px; border-radius: 50%; margin-right: 10px; background: #fff; flex-shrink: 0;}
+.user-msg .chat-avatar { margin-right: 0; margin-left: 10px; }
+
+.msg-content { padding: 12px 16px; border-radius: 15px; font-size: 15px; line-height: 1.4; position: relative; }
+.user-msg .msg-content { background: var(--primary); color: #fff; border-bottom-right-radius: 2px; }
+.bot-msg .msg-content { background: #e9ecef; color: #333; border-bottom-left-radius: 2px; }
+.msg-label { font-size: 11px; font-weight: bold; margin-bottom: 4px; opacity: 0.8; }
+
+.chat-controls { display: flex; padding: 15px; background: #fff; border-top: 1px solid #eee; gap: 10px; align-items: center; flex-shrink: 0; }
+.chat-controls input { flex: 1; padding: 12px 20px; border: 1px solid #ccc; border-radius: 25px; outline: none; font-size: 16px; min-width: 0;}
+.chat-controls input:focus { border-color: var(--primary); }
+
+.icon-btn { width: 45px; height: 45px; border-radius: 50%; border: none; font-size: 1.2rem; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.2s; flex-shrink: 0; touch-action: manipulation; }
+.mic-btn { background: #e8f5e9; color: #27ae60; }
+.mic-btn.active { background: #ffebee; color: #e74c3c; animation: pulse 1s infinite; }
+.send-btn { background: var(--primary); color: white; }
+
+@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+
+/* =========================================
+   THE ULTIMATE MOBILE HEIGHT & UI LOCK
+   ========================================= */
+.sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; opacity: 0; transition: opacity 0.3s; }
 .sidebar-overlay.open { display: block; opacity: 1; }
 
 @media (max-width: 768px) {
-    /* Main layout adjustment */
-    .main-content { padding-top: var(--header-height); }
+    /* 1. This completely locks the screen from jumping around on mobile */
+    html, body {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    /* 2. Main content takes up exact space below header */
+    .main-content { 
+        padding-top: var(--header-height); 
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden; /* Hide outer scroll, let inner containers scroll */
+    }
+
+    .mobile-header { display: flex; position: fixed; top: 0; width: 100%; z-index: 900; }
     
-    /* Sidebar lock to Full Screen */
-    .sidebar { position: fixed; top: 0; left: 0; bottom: 0; height: 100vh; height: 100dvh; transform: translateX(-100%); transition: transform 0.3s ease; z-index: 1001; }
+    .sidebar { position: fixed; top: 0; left: 0; bottom: 0; height: 100%; transform: translateX(-100%); transition: transform 0.3s ease; z-index: 1000; }
     .sidebar.open { transform: translateX(0); width: 250px; }
-    
-    .mobile-header { display: flex; position: fixed; z-index: 999; }
     .close-btn { display: block; }
     
-    .content-wrapper { padding: 15px; }
-    .page-title { font-size: 1.5rem; text-align: center; display: none; } /* Hidden on mobile to max out chat space */
+    .content-wrapper { padding: 10px; height: 100%; overflow-y: auto; display: flex; flex-direction: column; }
     
-    /* Perfect Fit Chat UI */
-    .jarvis-wrapper { padding: 15px 10px; height: calc(100vh - var(--header-height)); height: calc(100dvh - var(--header-height)); }
-    .chat-container { border-radius: 12px; border: 1px solid #ddd; }
+    .page-title { display: none; } /* Hide Title to save chat space */
+    .version-text { display: none; } /* Hide Footer to save chat space */
     
-    .mobile-controls { display: flex !important; gap: 10px; margin-bottom: 15px; }
+    /* 3. The Perfect Chat Container bounds */
+    .jarvis-wrapper { 
+        padding: 0; 
+        flex: 1; 
+        display: flex; 
+        flex-direction: column; 
+        height: 100%; 
+        min-height: 0; /* Let flexbox compress it properly */
+    }
+    
+    .chat-container { 
+        border-radius: 12px; 
+        flex: 1; 
+        display: flex; 
+        flex-direction: column; 
+        overflow: hidden;
+    }
+    
+    /* 4. Controls safe area (Pushes above iPhone home bar) */
+    .chat-controls { 
+        padding: 10px; 
+        gap: 8px; 
+        padding-bottom: calc(10px + env(safe-area-inset-bottom)); /* iOS safe zone */
+        background: #fff;
+        z-index: 20;
+    }
+    
+    .icon-btn { width: 44px; height: 44px; z-index: 50; position: relative; }
+    
+    /* Mobile Tables */
+    .mobile-controls { display: flex !important; gap: 10px; margin-bottom: 15px; flex-shrink: 0;}
     .dataTables_filter, .dataTables_length { display: none !important; } 
     .mobile-search-box { flex: 2; position: relative; }
     .mobile-search-box input { width: 100%; padding: 10px 15px; border-radius: 20px; border: 1px solid #eee; }
