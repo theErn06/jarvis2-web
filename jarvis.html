@@ -21,16 +21,12 @@
         overflow: hidden !important;
         background: #f0f2f5;
       }
-      
-      /* Wrapper that fits exactly into the fixed body */
       .direct-wrapper {
         display: flex;
         flex-direction: column;
         width: 100%;
         height: 100%;
       }
-      
-      /* Forces the chat input to stay above iOS/Android home bars */
       .chat-controls {
         padding-bottom: calc(15px + env(safe-area-inset-bottom)) !important;
       }
@@ -85,8 +81,13 @@
 
     <script src="jarvis.js"></script>
     <script>
+      // The fix: Set a flag so JS knows we are intentionally leaving
+      window.isNavigating = false;
+      
       function goBack() {
+        window.isNavigating = true; 
         window.close();
+        
         setTimeout(() => {
             window.location.href = "inventory.html";
         }, 150);
