@@ -1,12 +1,13 @@
-// --- JARVIS.JS: DIRECT IP VERSION (NO PROMPTS) ---
+const INJECTED_IP = '127.0.0.1';
 
-// 1. SET YOUR PC IP HERE (Change this to your actual PC IP)
-const PC_IP = "192.168.1.10"; 
+// FORCE targetIp to match the address in the browser bar
+// If you access via 192.168.1.5, the API will now definitely use 192.168.1.5
+let targetIp = window.location.hostname;
 
-// Automatically detect if running on PC (localhost) or Phone (Network IP)
-const targetIp = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') 
-    ? "127.0.0.1" 
-    : PC_IP;
+// Fallback if hostname is empty or a domain name (like GitHub)
+if (!targetIp || targetIp.includes('github.io')) {
+    targetIp = INJECTED_IP;
+}
 
 const JARVIS_URL = `http://${targetIp}:5000/chat`;
 
@@ -16,54 +17,23 @@ const STOP_SVG = `<svg viewBox="0 0 24 24" width="22" height="22" stroke="curren
 
 $(document).ready(function() {
     $('.jarvis-wrapper').css('display', 'flex');
-    console.log("🔗 Jarvis targeting:", JARVIS_URL);
-
-    // FIX: Re-bind the Enter key correctly to the sendText function
+    
+    // Fallback: Listen for the Enter key on the input field
     $('#chat-input').on('keypress', function (e) {
         if(e.which === 13) {
             e.preventDefault();
-            sendText(); 
+            sendText();
         }
     });
-
-    // Auto-scroll when virtual keyboard opens on mobile
+    
+    // Auto-scroll when virtual keyboard opens
     window.addEventListener('resize', () => {
-        let chatBox = $('#chat-history')[0];
-        if(chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+        if($('#chat-history').length) {
+            let chatBox = $('#chat-history')[0];
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
     });
 });
-
-function sendText() {
-    let inputEl = $('#chat-input');
-    let text = inputEl.val().trim();
-    if(!text) return;
-
-    addChatMsg(text, true);
-    inputEl.val('');
-    inputEl.blur(); // Hides mobile keyboard
-    
-    $('#send-btn').prop('disabled', true).css('opacity', '0.5');
-
-    // 2026 LNA compliant fetch for HTTPS -> HTTP
-    fetch(JARVIS_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text }),
-        targetAddressSpace: 'local' 
-    })
-    .then(response => response.json())
-    .then(data => {
-        $('#send-btn').prop('disabled', false).css('opacity', '1');
-        let reply = data.response || "Command processed.";
-        addChatMsg(reply, false);
-        speakText(reply);
-    })
-    .catch(error => {
-        console.error("Jarvis Error:", error);
-        $('#send-btn').prop('disabled', false).css('opacity', '1');
-        addChatMsg(`⚠️ Connection Failed. Target: ${targetIp}. Ensure Python is running and "Insecure Content" is allowed.`, false);
-    });
-}
 
 function addChatMsg(text, isUser) {
     let cls = isUser ? 'user-msg' : 'bot-msg';
@@ -81,20 +51,54 @@ function addChatMsg(text, isUser) {
     `;
     
     $('#chat-history').append(html);
+    
+    // Auto-scroll to latest message
     let chatBox = $('#chat-history')[0];
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
+// FIX: This matches the exact name the HTML buttons and form are looking for!
+function sendText() {
+    let inputEl = $('#chat-input');
+    let text = inputEl.val().trim();
+    if(!text) return;
+
+    addChatMsg(text, true);
+    inputEl.val('');
+    inputEl.blur(); // Hides mobile keyboard cleanly
+    
+    $('#send-btn').prop('disabled', true).css('opacity', '0.5');
+
+    fetch(JARVIS_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text })
+    })
+    .then(function(response) { 
+        return response.json(); 
+    })
+    .then(function(data) {
+        $('#send-btn').prop('disabled', false).css('opacity', '1');
+        let reply = data.response || "Done.";
+        addChatMsg(reply, false);
+        speakText(reply);
+    })
+    .catch(function(error) {
+        console.error("Jarvis Error:", error);
+        $('#send-btn').prop('disabled', false).css('opacity', '1');
+        addChatMsg(`⚠️ Connection Failed to ${targetIp}. Ensure Python is running and devices are on the exact same Wi-Fi.`, false);
+    });
+}
+
 function speakText(text) {
     if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
         let utterance = new SpeechSynthesisUtterance(text);
         utterance.rate = 1.0;
         window.speechSynthesis.speak(utterance);
     }
 }
 
-// --- VOICE RECOGNITION ---
+// --- WEB SPEECH RECOGNITION ---
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 let recognition = null;
 let isRecording = false;
@@ -102,6 +106,7 @@ let isRecording = false;
 if (SpeechRecognition) {
     recognition = new SpeechRecognition();
     recognition.continuous = false;
+    recognition.interimResults = false;
     recognition.lang = "en-US";
     
     recognition.onresult = function(e) {
@@ -112,19 +117,32 @@ if (SpeechRecognition) {
         sendText(); 
     };
     
-    recognition.onend = () => {
+    recognition.onerror = function(e) { 
+        console.error("Mic error:", e.error);
         $('#mic-btn').removeClass('active').html(MIC_SVG);
+        if($('#chat-input').val() === "Listening...") $('#chat-input').val("");
         isRecording = false;
     };
+    
+    recognition.onend = function() { 
+        $('#mic-btn').removeClass('active').html(MIC_SVG);
+        if($('#chat-input').val() === "Listening...") $('#chat-input').val("");
+        isRecording = false;
+    };
+} else {
+    $('#mic-btn').hide(); 
 }
 
+// FIX: This matches the exact name the HTML Mic button is looking for!
 function startVoice() {
-    if (!recognition) return alert("Voice not supported.");
+    if (!recognition) return alert("Voice input not supported on this browser.");
+    
     if (isRecording) {
         recognition.stop();
     } else {
         recognition.start();
         $('#mic-btn').addClass('active').html(STOP_SVG);
+        $('#chat-input').val("Listening...");
         isRecording = true;
     }
 }
