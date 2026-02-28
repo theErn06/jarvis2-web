@@ -1,102 +1,99 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Jarvis Smart Fridge - Login</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="style.css" />
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
   </head>
-  <body>
-    <div id="auth-wrapper">
-      <div class="auth-container">
-        <div id="login-view" class="auth-box">
-          <h2>Jarvis Assistant</h2>
-          <h3 style="color: #666; font-size: 16px; margin-top: -10px">
-            System Login
-          </h3>
-          <input type="text" id="login-user" placeholder="Username" />
-          <input type="password" id="login-pass" placeholder="Password" />
-          <button onclick="handleAuth('login')" id="btn-login">
-            <span class="btn-text">Login</span>
-            <div class="spinner"></div>
-          </button>
-          <p id="login-msg" class="error"></p>
-          <div
-            style="
-              margin-top: 20px;
-              display: flex;
-              justify-content: space-between;
-            "
-          >
-            <span
-              class="toggle-link"
-              onclick="showAuthView('change-pass-view')"
-              style="margin: 0"
-              >Change Password?</span
-            >
-            <span
-              class="toggle-link"
-              onclick="showAuthView('signup-view')"
-              style="margin: 0"
-              >Sign Up</span
-            >
-          </div>
-        </div>
+  <body style="display: flex; justify-content: center; align-items: center">
+    <div class="card auth-card" id="login-view">
+      <h2>Jarvis Assistant</h2>
+      <div class="subtitle">System Login</div>
 
-        <div id="signup-view" class="auth-box" style="display: none">
-          <h2>Create Account</h2>
-          <input type="text" id="signup-user" placeholder="Choose Username" />
-          <input
-            type="password"
-            id="signup-pass"
-            placeholder="Choose Password"
-          />
-          <button onclick="handleAuth('signup')" id="btn-signup">
-            <span class="btn-text">Sign Up</span>
-            <div class="spinner"></div>
-          </button>
-          <button class="secondary" onclick="showAuthView('login-view')">
-            Back
-          </button>
-          <p id="signup-msg" class="error"></p>
-        </div>
-
-        <div id="change-pass-view" class="auth-box" style="display: none">
-          <h2>Change Password</h2>
-          <input type="text" id="cp-user" placeholder="Username" />
-          <input type="password" id="cp-old" placeholder="Old Password" />
-          <input type="password" id="cp-new" placeholder="New Password" />
-          <button onclick="handleAuth('change_password')" id="btn-cp">
-            <span class="btn-text">Update</span>
-            <div class="spinner"></div>
-          </button>
-          <button class="secondary" onclick="showAuthView('login-view')">
-            Cancel
-          </button>
-          <p id="cp-msg" class="error"></p>
-        </div>
+      <div class="input-group">
+        <input type="text" id="login-user" placeholder="Username" />
       </div>
-      <div
-        style="
-          position: absolute;
-          bottom: 20px;
-          width: 100%;
-          text-align: center;
-          color: #7f8c8d;
-          font-size: 14px;
-        "
-      >
+      <div class="input-group">
+        <input type="password" id="login-pass" placeholder="Password" />
+      </div>
+
+      <button class="primary-btn" onclick="handleAuth('login')" id="btn-login">
+        <span class="btn-text">Login</span>
+        <div class="spinner"></div>
+      </button>
+      <div class="message error" id="login-msg"></div>
+
+      <div class="auth-actions">
+        <span onclick="showAuthView('change-pass-view')">Change Password?</span>
+        <span onclick="showAuthView('signup-view')">Sign Up</span>
+      </div>
+      <div style="margin-top: 30px; color: #7f8c8d; font-size: 14px">
         Version 4
       </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <div class="card auth-card" id="signup-view" style="display: none">
+      <h2>Create Account</h2>
+      <div class="subtitle">Register New User</div>
+
+      <div class="input-group">
+        <input type="text" id="signup-user" placeholder="Choose Username" />
+      </div>
+      <div class="input-group">
+        <input type="password" id="signup-pass" placeholder="Choose Password" />
+      </div>
+
+      <button
+        class="primary-btn"
+        onclick="handleAuth('signup')"
+        id="btn-signup"
+      >
+        <span class="btn-text">Sign Up</span>
+        <div class="spinner"></div>
+      </button>
+      <button class="text-btn" onclick="showAuthView('login-view')">
+        Back to Login
+      </button>
+      <div class="message error" id="signup-msg"></div>
+    </div>
+
+    <div class="card auth-card" id="change-pass-view" style="display: none">
+      <h2>Change Password</h2>
+      <div class="subtitle">Update Credentials</div>
+
+      <div class="input-group">
+        <input type="text" id="cp-user" placeholder="Username" />
+      </div>
+      <div class="input-group">
+        <input type="password" id="cp-old" placeholder="Old Password" />
+      </div>
+      <div class="input-group">
+        <input type="password" id="cp-new" placeholder="New Password" />
+      </div>
+
+      <button
+        class="primary-btn"
+        onclick="handleAuth('change_password')"
+        id="btn-cp"
+      >
+        <span class="btn-text">Update</span>
+        <div class="spinner"></div>
+      </button>
+      <button class="text-btn" onclick="showAuthView('login-view')">
+        Cancel
+      </button>
+      <div class="message error" id="cp-msg"></div>
+    </div>
+
     <script>
       const API_URL =
         "https://script.google.com/macros/s/AKfycbwR3LH7qkeNNNZgEhOSMFqXZcO9xyVF7DiQau7gDxcTJ6ljtgD4EwrIm8tmC-B-fMpMag/exec";
       function showAuthView(viewId) {
-        $(".auth-box").hide();
+        $(".auth-card").hide();
         $("#" + viewId).show();
-        $(".error, .success").hide().text("");
+        $(".error").text("");
         $("input").val("");
       }
       function handleAuth(action) {
@@ -119,14 +116,14 @@
           msgBox = $("#cp-msg");
           btn = $("#btn-cp");
         }
-        msgBox.hide();
+        msgBox.text("");
         btn
           .prop("disabled", true)
           .find(".btn-text")
           .hide()
           .end()
           .find(".spinner")
-          .show();
+          .css("display", "block");
         $.ajax({
           url: API_URL,
           method: "POST",
@@ -145,10 +142,7 @@
               res =
                 typeof response === "object" ? response : JSON.parse(response);
             } catch (e) {
-              msgBox
-                .addClass("error")
-                .text("Server returned invalid data.")
-                .show();
+              msgBox.text("Server returned invalid data.");
               return;
             }
             if (res.status === "success") {
@@ -163,7 +157,7 @@
                 showAuthView("login-view");
               }
             } else {
-              msgBox.addClass("error").text(res.message).show();
+              msgBox.text(res.message);
             }
           },
           error: function () {
@@ -174,7 +168,7 @@
               .end()
               .find(".spinner")
               .hide();
-            msgBox.addClass("error").text("Connection failed.").show();
+            msgBox.text("Connection failed.");
           },
         });
       }
