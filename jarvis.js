@@ -1,15 +1,26 @@
-const INJECTED_IP = '127.0.0.1';
+// --- IP PROMPT & LOCAL STORAGE LOGIC ---
+let targetIp = localStorage.getItem("jarvis_ip");
 
-// FORCE targetIp to match the address in the browser bar
-// If you access via 192.168.1.5, the API will now definitely use 192.168.1.5
-let targetIp = window.location.hostname;
-
-// Fallback if hostname is empty or a domain name (like GitHub)
-if (!targetIp || targetIp.includes('github.io')) {
-    targetIp = INJECTED_IP;
+// If the user hasn't saved an IP, prompt them for it
+if (!targetIp) {
+    targetIp = prompt("Jarvis Connection Setup:\n\nPlease enter the IP address displayed on your fridge (e.g., 192.168.1.10):");
+    
+    if (targetIp) {
+        targetIp = targetIp.trim();
+        localStorage.setItem("jarvis_ip", targetIp);
+    } else {
+        // Fallback to localhost if they cancel the prompt
+        targetIp = "127.0.0.1"; 
+    }
 }
 
 const JARVIS_URL = `http://${targetIp}:5000/chat`;
+
+// Helper function so the user can easily reset the IP if they type it wrong
+function resetIp() {
+    localStorage.removeItem("jarvis_ip");
+    location.reload();
+}
 
 // Beautiful SVG Icons
 const MIC_SVG = `<svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>`;
@@ -57,7 +68,7 @@ function addChatMsg(text, isUser) {
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// FIX: This matches the exact name the HTML buttons and form are looking for!
+// Send the text command to the Python API
 function sendText() {
     let inputEl = $('#chat-input');
     let text = inputEl.val().trim();
@@ -86,7 +97,9 @@ function sendText() {
     .catch(function(error) {
         console.error("Jarvis Error:", error);
         $('#send-btn').prop('disabled', false).css('opacity', '1');
-        addChatMsg(`⚠️ Connection Failed to ${targetIp}. Ensure Python is running and devices are on the exact same Wi-Fi.`, false);
+        
+        // If it fails, give the user an easy button right in the chat to reset the IP!
+        addChatMsg(`⚠️ Connection to <b>${targetIp}</b> failed. <br><br><a href="#" onclick="resetIp(); return false;" style="color:#e74c3c; font-weight:bold; text-decoration:underline;">Click here to re-enter IP address</a>.<br><br>(Note: If using your phone, ensure "Insecure Content" is allowed in Site Settings!)`, false);
     });
 }
 
@@ -133,7 +146,6 @@ if (SpeechRecognition) {
     $('#mic-btn').hide(); 
 }
 
-// FIX: This matches the exact name the HTML Mic button is looking for!
 function startVoice() {
     if (!recognition) return alert("Voice input not supported on this browser.");
     
