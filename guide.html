@@ -9,10 +9,11 @@
   </head>
   <body>
     <div id="dashboard-wrapper">
-      <div class="overlay" onclick="toggleMenu()"></div>
+      <div class="sidebar-overlay" onclick="toggleMenu()"></div>
       <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
           <div class="logo-area">
+            <div class="header-icon">❄️</div>
             <span class="header-text">Jarvis OS</span>
           </div>
           <button class="close-btn" onclick="toggleMenu()">×</button>
@@ -52,8 +53,7 @@
           <button class="menu-btn" onclick="toggleMenu()">☰</button>
           <span class="logo-text">Jarvis OS</span>
         </div>
-
-        <div class="inventory-wrapper" style="display: block; margin-top: 20px">
+        <div class="content-wrapper animate-fade-in">
           <h2 class="page-title">User Guide</h2>
 
           <div class="card info-card" style="text-align: left">
@@ -67,6 +67,38 @@
           </div>
 
           <div class="card info-card" style="text-align: left">
+            <h3>Hardware & Arduino Guide</h3>
+            <ul class="feature-list">
+              <li>
+                <div class="feature-icon">🔌</div>
+                <div class="feature-text">
+                  <h4>LCD Display Panel</h4>
+                  <p>
+                    The Arduino Uno is connected to an LCD display that provides
+                    real-time feedback. It shows <em>"Listening..."</em> when
+                    waiting for commands, <em>"Recording..."</em> when you
+                    speak, and prints Jarvis's text responses directly on the
+                    screen.
+                  </p>
+                </div>
+              </li>
+              <li>
+                <div class="feature-icon">🚪</div>
+                <div class="feature-text">
+                  <h4>Smart Door Sensor</h4>
+                  <p>
+                    A physical sensor tracks when the fridge door is opened or
+                    closed. If the door is left open for more than 30 seconds,
+                    the hardware triggers a watchdog reminder and Jarvis will
+                    audibly warn you to close the fridge to save energy and
+                    prevent food spoilage.
+                  </p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="card info-card" style="text-align: left">
             <h3>Website Navigation Guide</h3>
             <ul class="feature-list">
               <li>
@@ -74,9 +106,9 @@
                 <div class="feature-text">
                   <h4>Live Inventory</h4>
                   <p>
-                    View your current fridge stock in real-time. The table
-                    displays exact expiration dates. Expired items display a
-                    bold red warning.
+                    View your current fridge stock in real-time. Items that are
+                    expired will display a bold red warning, while items
+                    expiring soon will show in yellow.
                   </p>
                 </div>
               </li>
@@ -86,20 +118,20 @@
                   <h4>Remote Jarvis Console</h4>
                   <p>
                     Visit the <strong>Jarvis</strong> tab to talk to your fridge
-                    from your mobile phone! Simply type or speak your command
-                    into the terminal.
+                    from your mobile phone or PC.
                   </p>
                 </div>
               </li>
             </ul>
           </div>
+
           <div
             style="
               text-align: center;
               padding: 20px;
               color: #7f8c8d;
               font-size: 14px;
-              margin-top: 20px;
+              margin-top: auto;
             "
           >
             Version 4
@@ -112,7 +144,7 @@
       if (!currentUser) window.location.href = "index.html";
       function toggleMenu() {
         $("#sidebar").toggleClass("open");
-        $(".overlay").toggleClass("active");
+        $(".sidebar-overlay").toggleClass("open");
       }
       function logout() {
         sessionStorage.clear();
