@@ -66,7 +66,17 @@ function sendText() {
     .catch(err => {
         console.error("Jarvis Error:", err);
         $('#send-btn').prop('disabled', false).css('opacity', '1');
-        addChatMsg(`⚠️ Connection failed. Please ensure your Python server is running.`, false);
+        
+        // --- NEW AUTO-REDIRECT LOGIC ---
+        let newIp = prompt("Connection failed! The IP address may have changed.\n\nPlease enter the new IP shown on the Arduino Display (e.g., 192.168.1.10):");
+        
+        if (newIp) {
+            newIp = newIp.trim();
+            // Instantly route the current tab to the new IP address
+            window.location.href = `http://${newIp}:5000/jarvis.html`;
+        } else {
+            addChatMsg(`⚠️ Connection failed. Please ensure your Python server is running.`, false);
+        }
     });
 }
 
