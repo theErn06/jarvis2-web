@@ -67,7 +67,7 @@ function sendText() {
         console.error("Jarvis Error:", err);
         $('#send-btn').prop('disabled', false).css('opacity', '1');
         
-        // --- NEW AUTO-REDIRECT LOGIC ---
+        // --- AUTO-REDIRECT PROMPT LOGIC RE-ADDED ---
         let newIp = prompt("Connection failed! The IP address may have changed.\n\nPlease enter the new IP shown on the Arduino Display (e.g., 192.168.1.10):");
         
         if (newIp) {
