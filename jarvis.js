@@ -1,5 +1,5 @@
 // jarvis.py will automatically inject your Wi-Fi IP address right here!
-const INJECTED_IP = '127.0.0.1';
+const INJECTED_IP = '127.0.0.1.';
 
 // Intelligent Routing completely bypasses phone caching! 
 let targetIp = INJECTED_IP;
