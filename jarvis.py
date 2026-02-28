@@ -20,8 +20,8 @@ from datetime import datetime, timedelta
 from faster_whisper import WhisperModel
 from typing import List, Dict, Any, Tuple
 
-# ThreadingHTTPServer ensures background web requests never freeze!
-from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+# UPGRADE: SimpleHTTPRequestHandler turns Python into a full web server!
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 
 # ==========================================
 # CONFIGURATION & FILE PATHS
@@ -336,7 +336,7 @@ def get_list_outputs() -> tuple[str, str]:
         msg = "The fridge is empty."
         send_to_lcd(f"JARVIS: {msg}")
         lcd_busy_until = time.time() + 3.0 
-        return "   [EMPTY] Fridge is empty.", ""
+        return "   [EMPTY] Fridge is empty.", "The fridge is empty."
         
     term_lines = ["\n📦 INVENTORY:", "-"*65, f"{'ITEM':<15} | {'QTY':<8} | {'EXPIRY':<12} | {'STATUS'}", "-"*65]
     voice_parts = []
@@ -354,7 +354,8 @@ def get_list_outputs() -> tuple[str, str]:
     
     delay = 3.0 if len(full_text) <= 32 else ((len(full_text) - 15) * 0.3) + 1.0
     lcd_busy_until = time.time() + delay
-    return "\n".join(term_lines) + "\n", ""
+    
+    return "\n".join(term_lines) + "\n", "Inventory: " + ", ".join(voice_parts) + "."
 
 def get_lookup_output(item: str) -> tuple[str, str]:
     fridge = load_fridge()
@@ -590,21 +591,46 @@ def execute(actions: List[Dict], user_text: str) -> Tuple[str, str]:
 # ==========================================
 # WEB API SERVER HANDLER
 # ==========================================
-class JarvisAPIHandler(BaseHTTPRequestHandler):
+class JarvisAPIHandler(SimpleHTTPRequestHandler):
+    
+    # Force browsers NOT to cache our files so updates load instantly
+    def end_headers(self):
+        self.send_header('Cache-Control', 'no-store, no-cache, must-revalidate')
+        super().end_headers()
+
     def do_OPTIONS(self):
-        self.send_response(200)
+        self.send_response(204)
         self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'POST, OPTIONS')
-        self.send_header("Access-Control-Allow-Headers", "Content-Type")
-        self.end_headers()
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, Accept, Origin')
+        super().end_headers()
+
+    def do_GET(self):
+        # Auto-redirect the root IP to index.html
+        if self.path == '/':
+            self.path = '/index.html'
+            
+        if self.path == "/chat":
+            self.send_response(200)
+            self.send_header('Content-type', 'application/json')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            super().end_headers()
+            self.wfile.write(json.dumps({"status": "online", "message": "API Running"}).encode())
+        else:
+            # Serves the HTML, CSS, and JS files directly to the phone!
+            super().do_GET()
 
     def do_POST(self):
         global jarvis_awake, conversation_ended_time
         
         if self.path == "/chat":
-            content_length = int(self.headers['Content-Length'])
-            post_data = self.rfile.read(content_length)
-            data = json.loads(post_data)
+            try:
+                content_length = int(self.headers.get('Content-Length', 0))
+                post_data = self.rfile.read(content_length)
+                data = json.loads(post_data.decode("utf-8"))
+            except Exception:
+                data = {}
+
             command = data.get("message", "")
 
             jarvis_awake = True
@@ -635,20 +661,22 @@ class JarvisAPIHandler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header('Content-type', 'application/json')
             self.send_header('Access-Control-Allow-Origin', '*')
-            self.end_headers()
+            super().end_headers()
             self.wfile.write(json.dumps(resp).encode())
 
 # ==========================================
 # MAIN APPLICATION LOOP
 # ==========================================
 if __name__ == "__main__":
-    print(f"--- Jarvis ---")
+    print(f"--- Jarvis Unified Server ---")
     
     threading.Thread(target=listen_door_events, daemon=True).start()
     threading.Thread(target=door_reminder_watchdog, daemon=True).start()
 
     def start_server():
-        # --- AUTO IP INJECTION ---
+        # Ensure the server looks for HTML files in the exact folder this script is in
+        os.chdir(SCRIPT_DIR)
+        
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             s.connect(("8.8.8.8", 80))
@@ -657,28 +685,8 @@ if __name__ == "__main__":
         except Exception:
             local_ip = "127.0.0.1"
             
-        print(f"   [🌐] Web API listening on port 5000")
-        print(f"   [📱] Your Laptop's IP is: {local_ip}")
-        
-        js_path = os.path.join(SCRIPT_DIR, "jarvis.js")
-        if os.path.exists(js_path):
-            try:
-                with open(js_path, "r", encoding="utf-8") as f: 
-                    content = f.read()
-                
-                # Instantly modifies jarvis.js to match the active Wi-Fi IP
-                new_content = re.sub(
-                    r"(const\s+JARVIS_URL\s*=\s*['\"]http://)[^:]+(:\d+/chat['\"];)",
-                    rf"\g<1>{local_ip}\g<2>",
-                    content
-                )
-                
-                if new_content != content:
-                    with open(js_path, "w", encoding="utf-8") as f: 
-                        f.write(new_content)
-                    print(f"   [✅] Auto-injected {local_ip} into jarvis.js")
-            except Exception as e: 
-                pass
+        print(f"   [🌐] Unified Web Server & API active!")
+        print(f"   [📱] ON YOUR PHONE, OPEN THIS EXACT LINK: http://{local_ip}:5000")
 
         server = ThreadingHTTPServer(('0.0.0.0', 5000), JarvisAPIHandler)
         server.serve_forever()
