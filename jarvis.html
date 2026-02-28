@@ -2,17 +2,18 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
-    <title>Jarvis Smart Fridge - Jarvis</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jarvis Smart Fridge - Inventory</title>
     <link rel="stylesheet" href="style.css" />
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css"
+    />
   </head>
   <body>
     <div id="dashboard-wrapper">
-      <div class="sidebar-overlay" onclick="toggleMenu()"></div>
+      <div class="overlay" onclick="toggleMenu()"></div>
 
       <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
@@ -22,7 +23,7 @@
           <button class="close-btn" onclick="toggleMenu()">×</button>
         </div>
         <div class="nav-links">
-          <a class="nav-item" href="inventory.html"
+          <a class="nav-item active" href="inventory.html"
             ><div class="icon-box">📦</div>
             <span class="nav-text">Inventory</span></a
           >
@@ -38,7 +39,7 @@
             ><div class="icon-box">👨‍💻</div>
             <span class="nav-text">About Us</span></a
           >
-          <a class="nav-item active" href="jarvis.html"
+          <a class="nav-item" href="jarvis.html"
             ><div class="icon-box">🤖</div>
             <span class="nav-text">Jarvis</span></a
           >
@@ -57,73 +58,81 @@
           <span class="logo-text">Jarvis OS</span>
         </div>
 
-        <div class="content-container">
-          <h2 class="page-title jarvis-title">Jarvis Command Center</h2>
+        <div class="inventory-wrapper" style="display: block; margin-top: 20px">
+          <h2 class="page-title">Live Inventory</h2>
 
-          <div class="dashboard-view jarvis-view">
-            <div class="jarvis-wrapper">
-              <div class="chat-container">
-                <div class="chat-header">
-                  <img
-                    src="jarvis-icon.jpg"
-                    onerror="
-                      this.src =
-                        'https://cdn-icons-png.flaticon.com/512/4712/4712035.png'
-                    "
-                    alt="Jarvis"
-                  />
-                  <div class="chat-header-info">
-                    <h3>Jarvis Assistant</h3>
-                    <p><span class="status-dot"></span> Online</p>
-                  </div>
-                </div>
-
-                <div class="chat-history" id="chat-history">
-                  <div class="chat-msg bot-msg">
-                    <div class="msg-content">
-                      <div class="msg-label">JARVIS</div>
-                      System initialized and connected. I am ready for your
-                      commands!
-                    </div>
-                  </div>
-                </div>
-
-                <div class="chat-controls">
-                  <div class="chat-input-wrapper">
-                    <input
-                      type="text"
-                      id="chat-input"
-                      placeholder="Message Jarvis..."
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    class="icon-btn mic-btn"
-                    id="mic-btn"
-                    onclick="startVoice()"
-                  >
-                    🎤
-                  </button>
-                  <button
-                    type="button"
-                    class="icon-btn send-btn"
-                    id="send-btn"
-                    onclick="sendText()"
-                  >
-                    ➤
-                  </button>
-                </div>
-              </div>
+          <div class="mobile-controls">
+            <div class="mobile-search-box">
+              <input
+                type="text"
+                id="mobile-search-input"
+                placeholder="Search inventory..."
+              />
+            </div>
+            <div class="mobile-sort-box">
+              <select id="mobile-sort-select">
+                <option value="0_asc">Name (A-Z)</option>
+                <option value="1_desc">Highest Qty</option>
+                <option value="6_asc">Expiring Soon</option>
+              </select>
             </div>
           </div>
 
           <div
             style="
+              background-color: #fff3f3;
+              padding: 20px;
+              border-radius: 8px;
+              margin-bottom: 25px;
+              border-left: 5px solid #dc3545;
+            "
+          >
+            <h3
+              style="
+                margin: 0;
+                color: #2c3e50;
+                font-size: 16px;
+                font-weight: 600;
+              "
+            >
+              🚨 You wasted
+              <span
+                id="weekly-waste-count"
+                style="color: #dc3545; font-weight: bold"
+                >0</span
+              >
+              items last 7 days and
+              <span
+                id="monthly-waste-count"
+                style="color: #dc3545; font-weight: bold"
+                >0</span
+              >
+              items last 30 days.
+            </h3>
+          </div>
+
+          <div class="table-responsive">
+            <table id="inventory" class="display" style="width: 100%">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Qty</th>
+                  <th>Unit</th>
+                  <th>Category</th>
+                  <th>Expiry</th>
+                  <th>Status</th>
+                  <th>Days Left</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+          <div
+            style="
               text-align: center;
-              padding: 15px;
+              padding: 20px;
               color: #7f8c8d;
-              font-size: 13px;
-              margin-top: auto;
+              font-size: 14px;
+              margin-top: 20px;
             "
           >
             Version 4
@@ -132,7 +141,21 @@
       </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
     <script src="script.js"></script>
-    <script src="jarvis.js"></script>
+    <script>
+      let currentUser = sessionStorage.getItem("currentUser");
+      if (!currentUser) window.location.href = "index.html";
+      function toggleMenu() {
+        $("#sidebar").toggleClass("open");
+        $(".overlay").toggleClass("active");
+      }
+      function logout() {
+        sessionStorage.clear();
+        window.location.href = "index.html";
+      }
+    </script>
   </body>
 </html>
