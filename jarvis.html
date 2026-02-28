@@ -1,190 +1,134 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
-    />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>Jarvis Smart Fridge - Jarvis</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css">
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-  </head>
-  <body>
+</head>
+<body>
     <div id="dashboard-wrapper">
-      <div class="sidebar-overlay" onclick="toggleMenu()"></div>
+        <div class="sidebar-overlay" onclick="toggleMenu()"></div>
 
-      <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-          <div class="logo-area">
-            <div class="header-icon">❄️</div>
-            <span class="header-text">Jarvis OS</span>
-          </div>
-          <button class="close-btn" onclick="toggleMenu()">×</button>
-        </div>
-        <div class="nav-links">
-          <a class="nav-item" href="inventory.html"
-            ><div class="icon-box">📦</div>
-            <span class="nav-text">Inventory</span></a
-          >
-          <a class="nav-item" href="summary.html"
-            ><div class="icon-box">📊</div>
-            <span class="nav-text">Summary</span></a
-          >
-          <a class="nav-item" href="guide.html"
-            ><div class="icon-box">📖</div>
-            <span class="nav-text">Guide</span></a
-          >
-          <a class="nav-item" href="about.html"
-            ><div class="icon-box">👨‍💻</div>
-            <span class="nav-text">About Us</span></a
-          >
-          <a class="nav-item active" href="jarvis.html"
-            ><div class="icon-box">🤖</div>
-            <span class="nav-text">Jarvis</span></a
-          >
-        </div>
-        <div class="bottom-section" id="logout-section">
-          <a class="nav-item logout-item" onclick="logout()"
-            ><div class="icon-box">🚪</div>
-            <span class="nav-text">Logout</span></a
-          >
-        </div>
-      </div>
-
-      <div class="main-content">
-        <div class="mobile-header">
-          <button class="menu-btn" onclick="toggleMenu()">☰</button>
-          <span class="logo-text">Jarvis OS</span>
-        </div>
-
-        <div class="content-wrapper animate-fade-in" style="padding-bottom: 0">
-          <h2 class="page-title">Jarvis Command Center</h2>
-
-          <div class="jarvis-wrapper">
-            <div class="chat-container">
-              <div class="chat-history" id="chat-history">
-                <div class="chat-msg bot-msg">
-                  <img
-                    src="jarvis-icon.jpg"
-                    class="chat-avatar"
-                    onerror="this.style.display = 'none'"
-                  />
-                  <div class="msg-content">
-                    <div class="msg-label" style="color: #666">JARVIS</div>
-                    System online. I am ready for your commands.
-                  </div>
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-area">
+                    <div class="header-icon">❄️</div><span class="header-text">Jarvis OS</span>
                 </div>
-              </div>
-
-              <form
-                id="chat-form"
-                class="chat-controls"
-                onsubmit="
-                  event.preventDefault();
-                  sendText();
-                "
-              >
-                <input
-                  type="text"
-                  id="chat-input"
-                  placeholder="Message Jarvis..."
-                  autocomplete="off"
-                />
-
-                <button
-                  type="button"
-                  class="icon-btn mic-btn"
-                  id="mic-btn"
-                  onclick="startVoice()"
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    width="22"
-                    height="22"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    fill="none"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path
-                      d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"
-                    ></path>
-                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                    <line x1="12" y1="19" x2="12" y2="23"></line>
-                    <line x1="8" y1="23" x2="16" y2="23"></line>
-                  </svg>
-                </button>
-
-                <button type="submit" class="icon-btn send-btn" id="send-btn">
-                  <svg
-                    viewBox="0 0 24 24"
-                    width="22"
-                    height="22"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    fill="none"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    style="margin-right: 2px; margin-top: 2px"
-                  >
-                    <line x1="22" y1="2" x2="11" y2="13"></line>
-                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                  </svg>
-                </button>
-              </form>
+                <button class="close-btn" onclick="toggleMenu()">×</button>
             </div>
-          </div>
-
-          <div class="version-text">Version 4</div>
+            <div class="nav-links">
+                <a class="nav-item" href="inventory.html"><div class="icon-box">📦</div><span class="nav-text">Inventory</span></a>
+                <a class="nav-item" href="summary.html"><div class="icon-box">📊</div><span class="nav-text">Summary</span></a>
+                <a class="nav-item" href="guide.html"><div class="icon-box">📖</div><span class="nav-text">Guide</span></a>
+                <a class="nav-item" href="about.html"><div class="icon-box">👨‍💻</div><span class="nav-text">About Us</span></a>
+                <a class="nav-item active" href="jarvis.html"><div class="icon-box">🤖</div><span class="nav-text">Jarvis</span></a>
+            </div>
+            <div class="bottom-section" id="logout-section">
+                <a class="nav-item logout-item" onclick="logout()"><div class="icon-box">🚪</div><span class="nav-text">Logout</span></a>
+            </div>
         </div>
-      </div>
+
+        <div class="main-content">
+            <div class="mobile-header">
+                <button class="menu-btn" onclick="toggleMenu()">☰</button>
+                <span class="logo-text">Jarvis OS</span>
+            </div>
+
+            <div class="content-wrapper animate-fade-in" style="padding-bottom: 0;">
+                <h2 class="page-title">Jarvis Command Center</h2>
+                
+                <div class="jarvis-wrapper">
+                    <div class="chat-container">
+                        
+                        <div class="chat-history" id="chat-history">
+                            <div class="chat-msg bot-msg">
+                                <img src="jarvis-icon.jpg" class="chat-avatar" onerror="this.style.display='none'">
+                                <div class="msg-content">
+                                    <div class="msg-label" style="color: #666">JARVIS</div>
+                                    System online. Connected and ready for your commands!
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <form id="chat-form" class="chat-controls" onsubmit="event.preventDefault(); sendText();">
+                            <input type="text" id="chat-input" placeholder="Message Jarvis..." autocomplete="off">
+                            
+                            <button type="button" class="icon-btn mic-btn" id="mic-btn" onclick="startVoice()">
+                                <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                    <line x1="12" y1="19" x2="12" y2="23"></line>
+                                    <line x1="8" y1="23" x2="16" y2="23"></line>
+                                </svg>
+                            </button>
+
+                            <button type="submit" class="icon-btn send-btn" id="send-btn">
+                                <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 2px; margin-top: 2px;">
+                                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                </svg>
+                            </button>
+                        </form>
+
+                    </div>
+                </div>
+
+                <div class="version-text">Version 4</div>
+            </div>
+        </div>
     </div>
 
     <script src="script.js"></script>
-
+    
     <script>
       let currentUser = sessionStorage.getItem("currentUser");
       if (!currentUser) window.location.href = "index.html";
-
-      function toggleMenu() {
-        $("#sidebar").toggleClass("open");
-        $(".sidebar-overlay").toggleClass("open");
+      
+      function toggleMenu() { 
+          $("#sidebar").toggleClass("open"); 
+          $(".sidebar-overlay").toggleClass("open"); 
       }
-
-      function logout() {
-        sessionStorage.clear();
-        window.location.href = "index.html";
+      
+      function logout() { 
+          sessionStorage.clear(); 
+          window.location.href = "index.html"; 
       }
 
       /* =========================================================================
-         JARVIS LOGIC (Moved directly into HTML to completely defeat Mobile Cache)
+         ULTIMATE DYNAMIC IP ROUTER (100% Cache Proof & Zero Configuration)
          ========================================================================= */
+      
+      // Grabs the exact IP Address you are viewing the website on!
+      let serverIp = window.location.hostname;
+      
+      // Failsafe: If opened locally (file://) it defaults to localhost
+      if (!serverIp || serverIp === "") {
+          serverIp = "127.0.0.1";
+      }
 
-      // jarvis.py will automatically inject your PC's Wi-Fi IP address right here!
-      const JARVIS_URL = "http://127.0.0.1:5000/chat";
+      // Connects directly to the Python API running on that IP
+      const JARVIS_URL = `http://${serverIp}:5000/chat`;
 
       const MIC_SVG = `<svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>`;
       const STOP_SVG = `<svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12"></rect></svg>`;
 
-      $(document).ready(function () {
-        $(".jarvis-wrapper").css("display", "flex");
-
-        window.addEventListener("resize", () => {
-          let chatBox = $("#chat-history")[0];
-          chatBox.scrollTop = chatBox.scrollHeight;
-        });
+      $(document).ready(function() {
+          $('.jarvis-wrapper').css('display', 'flex');
+          
+          window.addEventListener('resize', () => {
+              let chatBox = $('#chat-history')[0];
+              chatBox.scrollTop = chatBox.scrollHeight;
+          });
       });
 
       function addChatMsg(text, isUser) {
-        let cls = isUser ? "user-msg" : "bot-msg";
-        let avatar = isUser
-          ? ""
-          : `<img src="jarvis-icon.jpg" class="chat-avatar" onerror="this.style.display='none'">`;
-        let label = isUser ? "YOU" : "JARVIS";
-
-        let html = `
+          let cls = isUser ? 'user-msg' : 'bot-msg';
+          let avatar = isUser ? '' : `<img src="jarvis-icon.jpg" class="chat-avatar" onerror="this.style.display='none'">`;
+          let label = isUser ? 'YOU' : 'JARVIS';
+          
+          let html = `
               <div class="chat-msg ${cls}">
                   ${avatar}
                   <div class="msg-content">
@@ -193,105 +137,98 @@
                   </div>
               </div>
           `;
-
-        $("#chat-history").append(html);
-        let chatBox = $("#chat-history")[0];
-        chatBox.scrollTop = chatBox.scrollHeight;
+          
+          $('#chat-history').append(html);
+          let chatBox = $('#chat-history')[0];
+          chatBox.scrollTop = chatBox.scrollHeight;
       }
 
       function sendText() {
-        let inputEl = $("#chat-input");
-        let text = inputEl.val().trim();
-        if (!text) return;
+          let inputEl = $('#chat-input');
+          let text = inputEl.val().trim();
+          if(!text) return;
 
-        addChatMsg(text, true);
-        inputEl.val("");
-        inputEl.blur(); // Drops mobile keyboard
+          addChatMsg(text, true);
+          inputEl.val('');
+          inputEl.blur(); // Drops mobile keyboard safely
+          
+          $('#send-btn').prop('disabled', true).css('opacity', '0.5');
 
-        $("#send-btn").prop("disabled", true).css("opacity", "0.5");
-
-        fetch(JARVIS_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: text }),
-        })
-          .then(function (response) {
-            return response.json();
+          fetch(JARVIS_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ message: text })
           })
-          .then(function (data) {
-            $("#send-btn").prop("disabled", false).css("opacity", "1");
-            let reply = data.response || "Done.";
-            addChatMsg(reply, false);
-            speakText(reply);
+          .then(function(response) { 
+              return response.json(); 
           })
-          .catch(function (error) {
-            console.error("Jarvis Error:", error);
-            $("#send-btn").prop("disabled", false).css("opacity", "1");
-            addChatMsg(
-              `⚠️ Connection Failed to backend. Make sure Python is running on your PC and your phone is on the exact same Wi-Fi.`,
-              false,
-            );
+          .then(function(data) {
+              $('#send-btn').prop('disabled', false).css('opacity', '1');
+              let reply = data.response || "Done.";
+              addChatMsg(reply, false);
+              speakText(reply);
+          })
+          .catch(function(error) {
+              console.error("Jarvis Error:", error);
+              $('#send-btn').prop('disabled', false).css('opacity', '1');
+              addChatMsg(`⚠️ Connection to ${serverIp} failed! Make sure your PC's Firewall allows Port 5000.`, false);
           });
       }
 
       function speakText(text) {
-        if ("speechSynthesis" in window) {
-          let utterance = new SpeechSynthesisUtterance(text);
-          utterance.rate = 1.0;
-          window.speechSynthesis.speak(utterance);
-        }
+          if ('speechSynthesis' in window) {
+              let utterance = new SpeechSynthesisUtterance(text);
+              utterance.rate = 1.0;
+              window.speechSynthesis.speak(utterance);
+          }
       }
 
       // --- WEB SPEECH RECOGNITION ---
-      const SpeechRecognition =
-        window.SpeechRecognition || window.webkitSpeechRecognition;
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       let recognition = null;
       let isRecording = false;
 
       if (SpeechRecognition) {
-        recognition = new SpeechRecognition();
-        recognition.continuous = false;
-        recognition.interimResults = false;
-        recognition.lang = "en-US";
-
-        recognition.onresult = function (e) {
-          $("#mic-btn").removeClass("active").html(MIC_SVG);
-          let text = e.results[0][0].transcript;
-          $("#chat-input").val(text);
-          isRecording = false;
-          sendText();
-        };
-
-        recognition.onerror = function (e) {
-          $("#mic-btn").removeClass("active").html(MIC_SVG);
-          if ($("#chat-input").val() === "Listening...")
-            $("#chat-input").val("");
-          isRecording = false;
-        };
-
-        recognition.onend = function () {
-          $("#mic-btn").removeClass("active").html(MIC_SVG);
-          if ($("#chat-input").val() === "Listening...")
-            $("#chat-input").val("");
-          isRecording = false;
-        };
+          recognition = new SpeechRecognition();
+          recognition.continuous = false;
+          recognition.interimResults = false;
+          recognition.lang = "en-US";
+          
+          recognition.onresult = function(e) {
+              $('#mic-btn').removeClass('active').html(MIC_SVG);
+              let text = e.results[0][0].transcript;
+              $('#chat-input').val(text);
+              isRecording = false;
+              sendText(); 
+          };
+          
+          recognition.onerror = function(e) { 
+              $('#mic-btn').removeClass('active').html(MIC_SVG);
+              if($('#chat-input').val() === "Listening...") $('#chat-input').val("");
+              isRecording = false;
+          };
+          
+          recognition.onend = function() { 
+              $('#mic-btn').removeClass('active').html(MIC_SVG);
+              if($('#chat-input').val() === "Listening...") $('#chat-input').val("");
+              isRecording = false;
+          };
       } else {
-        $("#mic-btn").hide();
+          $('#mic-btn').hide(); 
       }
 
       function startVoice() {
-        if (!recognition)
-          return alert("Voice input not supported on this browser.");
-
-        if (isRecording) {
-          recognition.stop();
-        } else {
-          recognition.start();
-          $("#mic-btn").addClass("active").html(STOP_SVG);
-          $("#chat-input").val("Listening...");
-          isRecording = true;
-        }
+          if (!recognition) return alert("Voice input not supported on this browser.");
+          
+          if (isRecording) {
+              recognition.stop();
+          } else {
+              recognition.start();
+              $('#mic-btn').addClass('active').html(STOP_SVG);
+              $('#chat-input').val("Listening...");
+              isRecording = true;
+          }
       }
     </script>
-  </body>
+</body>
 </html>
