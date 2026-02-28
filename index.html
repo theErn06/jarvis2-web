@@ -3,111 +3,7 @@
   <head>
     <title>Jarvis Smart Fridge - Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style>
-      body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #f0f2f5;
-        margin: 0;
-        color: #333;
-      }
-      @media (min-width: 769px) {
-        body {
-          zoom: 110%;
-        }
-      }
-      #auth-wrapper {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        padding: 20px;
-        box-sizing: border-box;
-        overflow: hidden;
-        position: relative;
-      }
-      .auth-container {
-        background: white;
-        padding: 2.5rem;
-        border-radius: 12px;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-        width: 100%;
-        max-width: 400px;
-      }
-      .auth-box {
-        text-align: center;
-      }
-      input {
-        width: 100%;
-        padding: 12px;
-        margin: 8px 0;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        box-sizing: border-box;
-      }
-      button {
-        width: 100%;
-        padding: 12px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        margin-top: 15px;
-        font-weight: 600;
-        transition: 0.2s;
-      }
-      button:hover {
-        background-color: #0056b3;
-      }
-      button:disabled {
-        background-color: #a0cfff;
-      }
-      .secondary {
-        background-color: #6c757d;
-        margin-top: 10px;
-      }
-      .secondary:hover {
-        background-color: #5a6268;
-      }
-      .error {
-        color: #dc3545;
-        display: none;
-        margin-top: 10px;
-        background: #ffe6e6;
-        padding: 8px;
-        border-radius: 4px;
-      }
-      .success {
-        color: #28a745;
-        display: none;
-        margin-top: 10px;
-        background: #e6ffed;
-        padding: 8px;
-        border-radius: 4px;
-      }
-      .spinner {
-        display: none;
-        width: 20px;
-        height: 20px;
-        border: 3px solid rgba(255, 255, 255, 0.3);
-        border-radius: 50%;
-        border-top-color: #fff;
-        animation: spin 1s infinite;
-        margin: 0 auto;
-      }
-      @keyframes spin {
-        to {
-          transform: rotate(360deg);
-        }
-      }
-      .toggle-link {
-        color: #007bff;
-        cursor: pointer;
-        display: block;
-        margin-top: 15px;
-        font-size: 14px;
-      }
-    </style>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div id="auth-wrapper">
@@ -179,7 +75,6 @@
           <p id="cp-msg" class="error"></p>
         </div>
       </div>
-
       <div
         style="
           position: absolute;
@@ -198,18 +93,15 @@
     <script>
       const API_URL =
         "https://script.google.com/macros/s/AKfycbwR3LH7qkeNNNZgEhOSMFqXZcO9xyVF7DiQau7gDxcTJ6ljtgD4EwrIm8tmC-B-fMpMag/exec";
-
       function showAuthView(viewId) {
         $(".auth-box").hide();
         $("#" + viewId).show();
         $(".error, .success").hide().text("");
         $("input").val("");
       }
-
       function handleAuth(action) {
         let payload = { action: action };
         let msgBox, btn;
-
         if (action === "login") {
           payload.username = $("#login-user").val();
           payload.password = $("#login-pass").val();
@@ -227,7 +119,6 @@
           msgBox = $("#cp-msg");
           btn = $("#btn-cp");
         }
-
         msgBox.hide();
         btn
           .prop("disabled", true)
@@ -236,7 +127,6 @@
           .end()
           .find(".spinner")
           .show();
-
         $.ajax({
           url: API_URL,
           method: "POST",
@@ -257,17 +147,14 @@
             } catch (e) {
               msgBox
                 .addClass("error")
-                .text("Server returned invalid data. Check Console.")
+                .text("Server returned invalid data.")
                 .show();
               return;
             }
-
             if (res.status === "success") {
               if (action === "login" || action === "signup") {
                 if (action === "signup")
                   alert("Account created! Logging you in...");
-
-                // Session Storage added to persist credentials across the separated pages
                 sessionStorage.setItem("currentUser", payload.username);
                 sessionStorage.setItem("currentPass", payload.password);
                 window.location.href = "inventory.html";
@@ -287,10 +174,7 @@
               .end()
               .find(".spinner")
               .hide();
-            msgBox
-              .addClass("error")
-              .text("Connection failed. See console for details.")
-              .show();
+            msgBox.addClass("error").text("Connection failed.").show();
           },
         });
       }
