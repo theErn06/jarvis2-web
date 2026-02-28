@@ -1,131 +1,118 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Jarvis Smart Fridge - Guide</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="style.css" />
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
   </head>
   <body>
     <div id="dashboard-wrapper">
-      <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+      <div class="overlay" onclick="toggleMenu()"></div>
       <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">Jarvis OS</div>
-        <div class="sidebar-menu">
-          <a class="nav-link" href="inventory.html">📦 Inventory</a>
-          <a class="nav-link" href="summary.html">📊 Summary</a>
-          <a class="nav-link active" href="guide.html">📖 Guide</a>
-          <a class="nav-link" href="about.html">👨‍💻 About Us</a>
-          <a class="nav-link" href="jarvis.html">🤖 Jarvis</a>
+        <div class="sidebar-header">
+          <div class="logo-area">
+            <span class="header-text">Jarvis OS</span>
+          </div>
+          <button class="close-btn" onclick="toggleMenu()">×</button>
+        </div>
+        <div class="nav-links">
+          <a class="nav-item" href="inventory.html"
+            ><div class="icon-box">📦</div>
+            <span class="nav-text">Inventory</span></a
+          >
+          <a class="nav-item" href="summary.html"
+            ><div class="icon-box">📊</div>
+            <span class="nav-text">Summary</span></a
+          >
+          <a class="nav-item active" href="guide.html"
+            ><div class="icon-box">📖</div>
+            <span class="nav-text">Guide</span></a
+          >
+          <a class="nav-item" href="about.html"
+            ><div class="icon-box">👨‍💻</div>
+            <span class="nav-text">About Us</span></a
+          >
+          <a class="nav-item" href="jarvis.html"
+            ><div class="icon-box">🤖</div>
+            <span class="nav-text">Jarvis</span></a
+          >
+        </div>
+        <div class="bottom-section" id="logout-section">
+          <a class="nav-item logout-item" onclick="logout()"
+            ><div class="icon-box">🚪</div>
+            <span class="nav-text">Logout</span></a
+          >
         </div>
       </div>
 
       <div class="main-content">
-        <div class="topbar">
-          <div class="topbar-left">
-            <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
-            <h2 class="topbar-title" id="page-title">User Guide</h2>
-          </div>
-          <button class="danger-btn" onclick="logout()">Logout</button>
+        <div class="mobile-header">
+          <button class="menu-btn" onclick="toggleMenu()">☰</button>
+          <span class="logo-text">Jarvis OS</span>
         </div>
 
-        <div class="content-container">
+        <div class="inventory-wrapper" style="display: block; margin-top: 20px">
+          <h2 class="page-title">User Guide</h2>
+
+          <div class="card info-card" style="text-align: left">
+            <h3>System Overview</h3>
+            <p style="color: #555; line-height: 1.6">
+              Welcome to the Jarvis Smart Fridge dashboard. This application
+              synchronizes directly with your local smart refrigerator hardware,
+              allowing you to monitor your groceries and track food waste from
+              anywhere.
+            </p>
+          </div>
+
+          <div class="card info-card" style="text-align: left">
+            <h3>Website Navigation Guide</h3>
+            <ul class="feature-list">
+              <li>
+                <div class="feature-icon">📦</div>
+                <div class="feature-text">
+                  <h4>Live Inventory</h4>
+                  <p>
+                    View your current fridge stock in real-time. The table
+                    displays exact expiration dates. Expired items display a
+                    bold red warning.
+                  </p>
+                </div>
+              </li>
+              <li>
+                <div class="feature-icon">🤖</div>
+                <div class="feature-text">
+                  <h4>Remote Jarvis Console</h4>
+                  <p>
+                    Visit the <strong>Jarvis</strong> tab to talk to your fridge
+                    from your mobile phone! Simply type or speak your command
+                    into the terminal.
+                  </p>
+                </div>
+              </li>
+            </ul>
+          </div>
           <div
-            id="guide-tab"
-            class="dashboard-view"
-            style="background: transparent; box-shadow: none; padding: 0"
+            style="
+              text-align: center;
+              padding: 20px;
+              color: #7f8c8d;
+              font-size: 14px;
+              margin-top: 20px;
+            "
           >
-            <div class="info-card">
-              <h3>System Overview</h3>
-              <p style="color: #555; line-height: 1.6">
-                Welcome to the Jarvis Smart Fridge dashboard. This web
-                application synchronizes directly with your local smart
-                refrigerator hardware, allowing you to monitor your groceries
-                and track food waste from anywhere using your cloud account.
-              </p>
-            </div>
-            <div class="info-card">
-              <h3>Hardware & Interaction Guide</h3>
-              <ul class="feature-list">
-                <li>
-                  <div class="feature-icon">🗣️</div>
-                  <div class="feature-text">
-                    <h4>Voice Mode (Speak to PC)</h4>
-                    <p>
-                      You can directly speak to your PC's microphone to talk to
-                      Jarvis! Simply say <strong>"Hey Jarvis"</strong> followed
-                      by a natural command like <em>"Add two apples"</em> or
-                      <em>"Remove the milk."</em> The system uses advanced AI
-                      STT to instantly transcribe and process your speech.
-                    </p>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="info-card">
-              <h3>Website Navigation Guide</h3>
-              <ul class="feature-list">
-                <li>
-                  <div class="feature-icon">📦</div>
-                  <div class="feature-text">
-                    <h4>Live Inventory</h4>
-                    <p>
-                      Navigate to the <strong>Inventory</strong> tab to view
-                      your current fridge stock in real-time. The table displays
-                      item quantities, categorized groupings, and exact
-                      expiration dates. Items that have passed their expiration
-                      will display a bold red warning.
-                    </p>
-                  </div>
-                </li>
-                <li>
-                  <div class="feature-icon">📊</div>
-                  <div class="feature-text">
-                    <h4>Waste Summary Analytics</h4>
-                    <p>
-                      Open the <strong>Summary</strong> tab to track your food
-                      waste efficiency. This dashboard automatically generates
-                      structured weekly and monthly reports showing exactly
-                      which expired items were removed from the fridge.
-                    </p>
-                  </div>
-                </li>
-                <li>
-                  <div class="feature-icon">🤖</div>
-                  <div class="feature-text">
-                    <h4>Remote Jarvis Console</h4>
-                    <p>
-                      Visit the <strong>Jarvis</strong> tab to talk to your
-                      fridge from your mobile phone! Ensure your phone is
-                      connected to the same Wi-Fi network as the fridge to issue
-                      remote commands instantly.
-                    </p>
-                  </div>
-                </li>
-              </ul>
-            </div>
+            Version 4
           </div>
-        </div>
-
-        <div
-          style="
-            text-align: center;
-            padding: 20px;
-            color: #7f8c8d;
-            font-size: 14px;
-            margin-top: auto;
-          "
-        >
-          Version 4
         </div>
       </div>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script>
       let currentUser = sessionStorage.getItem("currentUser");
       if (!currentUser) window.location.href = "index.html";
-      function toggleSidebar() {
-        $("#sidebar, .sidebar-overlay").toggleClass("open");
+      function toggleMenu() {
+        $("#sidebar").toggleClass("open");
+        $(".overlay").toggleClass("active");
       }
       function logout() {
         sessionStorage.clear();
