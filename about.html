@@ -6,10 +6,37 @@
     <title>Jarvis Smart Fridge - About Us</title>
     <link rel="stylesheet" href="style.css" />
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <style>
+      .spec-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+      }
+      .spec-item {
+        background: #fdfdfd;
+        border: 1px solid #eee;
+        padding: 15px;
+        border-radius: 8px;
+      }
+      .spec-title {
+        color: #3498db;
+        font-weight: bold;
+        margin-bottom: 5px;
+        font-size: 14px;
+        text-transform: uppercase;
+      }
+      .spec-value {
+        color: #2c3e50;
+        font-size: 15px;
+        line-height: 1.4;
+      }
+    </style>
   </head>
   <body>
     <div id="dashboard-wrapper">
       <div class="sidebar-overlay" onclick="toggleMenu()"></div>
+      
       <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
           <div class="logo-area">
@@ -19,32 +46,14 @@
           <button class="close-btn" onclick="toggleMenu()">×</button>
         </div>
         <div class="nav-links">
-          <a class="nav-item" href="inventory.html"
-            ><div class="icon-box">📦</div>
-            <span class="nav-text">Inventory</span></a
-          >
-          <a class="nav-item" href="summary.html"
-            ><div class="icon-box">📊</div>
-            <span class="nav-text">Summary</span></a
-          >
-          <a class="nav-item" href="guide.html"
-            ><div class="icon-box">📖</div>
-            <span class="nav-text">Guide</span></a
-          >
-          <a class="nav-item active" href="about.html"
-            ><div class="icon-box">👨‍💻</div>
-            <span class="nav-text">About Us</span></a
-          >
-          <a class="nav-item" href="#" onclick="openJarvisTab(event)">
-            <div class="icon-box">🤖</div>
-            <span class="nav-text">Jarvis</span>
-          </a>
+          <a class="nav-item" href="inventory.html"><div class="icon-box">📦</div><span class="nav-text">Inventory</span></a>
+          <a class="nav-item" href="summary.html"><div class="icon-box">📊</div><span class="nav-text">Summary</span></a>
+          <a class="nav-item" href="guide.html"><div class="icon-box">📖</div><span class="nav-text">Guide</span></a>
+          <a class="nav-item active" href="about.html"><div class="icon-box">👨‍💻</div><span class="nav-text">About Us</span></a>
+          <a class="nav-item" href="#" onclick="openJarvisTab(event)"><div class="icon-box">🤖</div><span class="nav-text">Jarvis</span></a>
         </div>
         <div class="bottom-section" id="logout-section">
-          <a class="nav-item logout-item" onclick="logout()"
-            ><div class="icon-box">🚪</div>
-            <span class="nav-text">Logout</span></a
-          >
+          <a class="nav-item logout-item" onclick="logout()"><div class="icon-box">🚪</div><span class="nav-text">Logout</span></a>
         </div>
       </div>
 
@@ -53,66 +62,64 @@
           <button class="menu-btn" onclick="toggleMenu()">☰</button>
           <span class="logo-text">Jarvis OS</span>
         </div>
-        <div class="content-wrapper animate-fade-in">
-          <h2 class="page-title">About Us</h2>
-          <div
-            class="card info-card"
-            style="text-align: center; padding: 40px 20px"
-          >
-            <span class="university-badge">CAPSTONE PROJECT</span>
-            <h2 style="margin: 10px 0 5px 0; color: #2c3e50; font-size: 28px">
-              Smart Refrigerator Assistant
-            </h2>
-            <h4 style="margin: 0; color: #7f8c8d; font-weight: normal">
-              (Project Jarvis)
-            </h4>
-            <div
-              style="
-                margin: 30px auto;
-                max-width: 600px;
-                text-align: left;
-                background: #f8f9fa;
-                padding: 20px;
-                border-radius: 8px;
-                border-left: 4px solid var(--primary);
-              "
-            >
-              <p style="margin-top: 0; color: #444; line-height: 1.6">
-                Developed by Year 3 students from the Bachelor of Electrical &
-                Electronics (E&E) program at <strong>TARUMT</strong>.
-              </p>
+        
+        <div class="content-wrapper animate-fade-in" style="overflow-y: auto;">
+          <h2 class="page-title">About Us & Technical Specs</h2>
+
+          <div class="card info-card" style="text-align: left; text-align: center; padding: 30px 20px;">
+            <div style="font-size: 40px; margin-bottom: 10px;">🎓</div>
+            <h3 style="color: #2c3e50; font-size: 22px; margin-bottom: 10px;">The Development Team</h3>
+            <p style="color: #555; line-height: 1.6; font-size: 16px;">
+              We are Year 3 Bachelor's Degree students in Electrical & Electronics Engineering at <strong>TAR UMT</strong>. 
+              The Jarvis Smart Refrigerator Assistant was developed as our Capstone Project to solve real-world food waste using Edge AI and local hardware integration.
+            </p>
+          </div>
+
+          <h3 style="color: #e74c3c; font-size: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 30px;">System Specifications</h3>
+          
+          <div class="spec-grid">
+            <div class="spec-item">
+              <div class="spec-title">Speech-To-Text (STT)</div>
+              <div class="spec-value"><strong>Faster Whisper (small.en)</strong><br>Offline neural transcription with Silero VAD (Voice Activity Detection) and dynamic noise calibration.</div>
             </div>
-            <div style="margin-top: 30px">
-              <h4 style="color: #2c3e50; margin-bottom: 15px">
-                Technology Stack
-              </h4>
-              <div class="tech-tags">
-                <span class="tag">Edge-LLM (Ollama)</span
-                ><span class="tag">Silero VAD</span
-                ><span class="tag">Faster Whisper</span>
-                <span class="tag">Python</span
-                ><span class="tag">Arduino (C++)</span
-                ><span class="tag">HTML/CSS/JS</span>
-              </div>
+            
+            <div class="spec-item">
+              <div class="spec-title">Edge AI Logic (LLM)</div>
+              <div class="spec-value"><strong>Ollama Engine</strong><br>Local AI inference running the custom <em>Jarvis</em> model to convert natural speech into JSON executable actions.</div>
+            </div>
+
+            <div class="spec-item">
+              <div class="spec-title">Hardware Controller</div>
+              <div class="spec-value"><strong>Arduino UNO</strong><br>Serial communication handling a 16x2 I2C LCD Display and a digital Door Contact Sensor.</div>
+            </div>
+
+            <div class="spec-item">
+              <div class="spec-title">Text-To-Speech (TTS)</div>
+              <div class="spec-value"><strong>pyttsx3 Engine</strong><br>Thread-safe local speech synthesis providing offline vocal feedback.</div>
+            </div>
+
+            <div class="spec-item">
+              <div class="spec-title">Data Storage Space</div>
+              <div class="spec-value"><strong>Local JSON Architecture</strong><br>Ultra-lightweight local storage (`fridge.json` & `waste_log.json`). Zero cloud database dependency required.</div>
+            </div>
+
+            <div class="spec-item">
+              <div class="spec-title">Network Architecture</div>
+              <div class="spec-value"><strong>Unified HTTP Server</strong><br>Local API running on port 5000 with CORS and Local Network Access (LNA) bypass capabilities.</div>
             </div>
           </div>
-          <div
-            style="
-              text-align: center;
-              padding: 20px;
-              color: #7f8c8d;
-              font-size: 14px;
-              margin-top: auto;
-            "
-          >
+
+          <div style="text-align: center; padding: 20px; color: #7f8c8d; font-size: 14px; margin-top: 30px;">
             Version 4
           </div>
         </div>
       </div>
     </div>
+
     <script>
       let currentUser = sessionStorage.getItem("currentUser");
       if (!currentUser) window.location.href = "index.html";
+      
       function toggleMenu() {
         $("#sidebar").toggleClass("open");
         $(".sidebar-overlay").toggleClass("open");
@@ -123,32 +130,19 @@
       }
 
       function openJarvisTab(e) {
-        e.preventDefault();
-        let currentHost = window.location.hostname;
-
-        // If you are using your laptop and are already on localhost, open normally in same tab
-        if (
-          currentHost === "localhost" ||
-          currentHost === "127.0.0.1" ||
-          /^(192\.168|10\.|172\.)/.test(currentHost)
-        ) {
-          window.location.href = "jarvis.html";
-          return;
-        }
-
-        // If you are on GitHub, Prompt the user and open a NEW tab directly to the IP
-        let savedIp = localStorage.getItem("jarvis_ip");
-        let targetIp = prompt(
-          "Jarvis Direct Link:\n\nEnter the IP address shown on the Arduino Display (e.g., 192.168.1.10):",
-          savedIp || "",
-        );
-
-        if (targetIp) {
-          targetIp = targetIp.trim();
-          localStorage.setItem("jarvis_ip", targetIp);
-          // Opens http://192.168.x.x:5000/jarvis.html in a fresh browser tab!
-          window.open(`http://${targetIp}:5000/jarvis.html`, "_blank");
-        }
+          e.preventDefault();
+          let currentHost = window.location.hostname;
+          if (currentHost === 'localhost' || currentHost === '127.0.0.1' || /^(192\.168|10\.|172\.)/.test(currentHost)) {
+              window.location.href = "jarvis.html";
+              return;
+          }
+          let savedIp = localStorage.getItem("jarvis_ip");
+          let targetIp = prompt("Jarvis Direct Link:\n\nEnter the IP address shown on the Arduino Display (e.g., 192.168.1.10):", savedIp || "");
+          if (targetIp) {
+              targetIp = targetIp.trim();
+              localStorage.setItem("jarvis_ip", targetIp);
+              window.open(`http://${targetIp}:5000/jarvis.html`, '_blank');
+          }
       }
     </script>
   </body>
