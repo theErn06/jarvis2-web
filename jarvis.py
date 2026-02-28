@@ -677,26 +677,16 @@ if __name__ == "__main__":
     def start_server():
         os.chdir(SCRIPT_DIR)
         
-        # Enhanced IP detection to ensure we don't grab 127.0.0.1
+        # This ensures the server listens to the entire local network
         try:
-            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            s.settimeout(0)
-            s.connect(("8.8.8.8", 80))
-            local_ip = s.getsockname()[0]
-            s.close()
-        except Exception:
-            local_ip = "127.0.0.1"
-            
-        print(f"\n   [🌐] Unified Web Server & API active!")
-        print(f"   [📱] STEP 1: Connect phone to the SAME Wi-Fi.")
-        print(f"   [📱] STEP 2: Open this link: http://{local_ip}:5000")
-        print(f"   [📱] STEP 3: If using GitHub version, enable 'Insecure Content' in site settings.")
-
-        # Ensure '0.0.0.0' is used to listen to the WHOLE network, not just the PC
-        server = ThreadingHTTPServer(('0.0.0.0', 5000), JarvisAPIHandler)
-        server.serve_forever()
-        
-    threading.Thread(target=start_server, daemon=True).start()
+            server = ThreadingHTTPServer(('0.0.0.0', 5000), JarvisAPIHandler)
+            # On Windows, your PC is often reachable at http://computername.local
+            hostname = socket.gethostname()
+            print(f"\n   [🌐] Jarvis Server Active")
+            print(f"   [📱] Access via GitHub or: http://{hostname}.local:5000")
+            server.serve_forever()
+        except Exception as e:
+            print(f"Server Error: {e}")
 
     try:
         CURRENT_MIC_NAME = sd.query_devices(kind='input')['name']
