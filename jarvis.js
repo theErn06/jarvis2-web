@@ -1,35 +1,36 @@
-// --- AUTOMATED CONNECTION BRIDGE ---
-async function getJarvisUrl() {
-    let savedIp = localStorage.getItem('jarvis_pc_ip');
-    
-    // If we have a saved IP, test if it's still alive
-    if (savedIp) {
-        try {
-            const controller = new AbortController();
-            const id = setTimeout(() => controller.abort(), 2000); // 2s timeout
-            const response = await fetch(`http://${savedIp}:5000/chat`, { 
-                method: 'GET', 
-                signal: controller.signal 
-            });
-            if (response.ok) return `http://${savedIp}:5000/chat`;
-        } catch (e) {
-            console.log("Saved IP is no longer valid. Searching...");
+// --- AUTOMATED BLIND CONNECTION ---
+async function autoConnectJarvis() {
+    // 1. Try the standard local hostname (Replace 'YourPCName' with your actual PC name)
+    const pcHostname = "jarvis-pc.local"; 
+    const testUrl = `http://${pcHostname}:5000/chat`;
+
+    try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 1500); 
+        const response = await fetch(testUrl, { method: 'GET', signal: controller.signal });
+        
+        if (response.ok) {
+            console.log("Connected via Hostname!");
+            return testUrl;
         }
+    } catch (e) {
+        console.log("Hostname not found, checking last known IP...");
     }
 
-    // If no saved IP or it failed, ask the user once and save it
-    // In a Capstone, you can also hardcode your home IP here as a fallback
-    let currentIp = prompt("Jarvis Sync: Enter your PC's IPv4 (See your Python terminal):");
-    if (currentIp) {
-        localStorage.setItem('jarvis_pc_ip', currentIp);
-        return `http://${currentIp}:5000/chat`;
+    // 2. Fallback to localStorage if hostname fails
+    let savedIp = localStorage.getItem('jarvis_pc_ip');
+    if (savedIp) return `http://${savedIp}:5000/chat`;
+
+    // 3. Last resort: Prompt user
+    let manualIp = prompt("System cannot find Jarvis. Please enter your PC IP (e.g., 192.168.1.5):");
+    if (manualIp) {
+        localStorage.setItem('jarvis_pc_ip', manualIp);
+        return `http://${manualIp}:5000/chat`;
     }
-    return `http://127.0.0.1:5000/chat`;
 }
 
-// Global variable used by your sendText() function
 let JARVIS_URL;
-getJarvisUrl().then(url => JARVIS_URL = url);
+autoConnectJarvis().then(url => JARVIS_URL = url);
 
 // Beautiful SVG Icons
 const MIC_SVG = `<svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>`;
