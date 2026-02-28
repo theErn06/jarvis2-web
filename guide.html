@@ -35,10 +35,10 @@
             ><div class="icon-box">👨‍💻</div>
             <span class="nav-text">About Us</span></a
           >
-          <a class="nav-item" href="jarvis.html"
-            ><div class="icon-box">🤖</div>
-            <span class="nav-text">Jarvis</span></a
-          >
+          <a class="nav-item" href="#" onclick="openJarvisTab(event)">
+            <div class="icon-box">🤖</div>
+            <span class="nav-text">Jarvis</span>
+          </a>
         </div>
         <div class="bottom-section" id="logout-section">
           <a class="nav-item logout-item" onclick="logout()"
@@ -149,6 +149,35 @@
       function logout() {
         sessionStorage.clear();
         window.location.href = "index.html";
+      }
+
+      function openJarvisTab(e) {
+        e.preventDefault();
+        let currentHost = window.location.hostname;
+
+        // If you are using your laptop and are already on localhost, open normally in same tab
+        if (
+          currentHost === "localhost" ||
+          currentHost === "127.0.0.1" ||
+          /^(192\.168|10\.|172\.)/.test(currentHost)
+        ) {
+          window.location.href = "jarvis.html";
+          return;
+        }
+
+        // If you are on GitHub, Prompt the user and open a NEW tab directly to the IP
+        let savedIp = localStorage.getItem("jarvis_ip");
+        let targetIp = prompt(
+          "Jarvis Direct Link:\n\nEnter the IP address shown on the Arduino Display (e.g., 192.168.1.10):",
+          savedIp || "",
+        );
+
+        if (targetIp) {
+          targetIp = targetIp.trim();
+          localStorage.setItem("jarvis_ip", targetIp);
+          // Opens http://192.168.x.x:5000/jarvis.html in a fresh browser tab!
+          window.open(`http://${targetIp}:5000/jarvis.html`, "_blank");
+        }
       }
     </script>
   </body>
