@@ -1,121 +1,114 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
-    <title>Jarvis Smart Fridge - Command Center</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style>
-      body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; margin: 0; color: #333; }
-      @media (min-width: 769px) { body { zoom: 110%; } }
-      #dashboard-wrapper { display: flex; height: 100vh; overflow: hidden; }
-      .sidebar { width: 250px; min-width: 250px; flex-shrink: 0; background: #2c3e50; color: white; height: 100vh; display: flex; flex-direction: column; transition: transform 0.3s ease; z-index: 1000; }
-      .sidebar-header { padding: 20px; font-size: 20px; font-weight: bold; background: #1a252f; text-align: center; border-bottom: 1px solid #34495e; }
-      .sidebar-menu { display: flex; flex-direction: column; padding-top: 10px; flex-grow: 1; }
-      .sidebar-menu a { padding: 15px 25px; text-decoration: none; font-size: 16px; color: #ecf0f1; display: block; transition: 0.2s; border-left: 4px solid transparent; cursor: pointer; }
-      .sidebar-menu a:hover { background: #34495e; }
-      .sidebar-menu a.active { background: #34495e; border-left-color: #3498db; font-weight: bold; }
-      .main-content { flex-grow: 1; height: 100vh; overflow-y: auto; background-color: #f8f9fa; display: flex; flex-direction: column; }
-      .topbar { background: white; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); }
-      .menu-toggle { font-size: 24px; cursor: pointer; display: none; background: none; border: none; color: #2c3e50; padding: 0; margin-right: 15px; }
-      .topbar-left { display: flex; align-items: center; }
-      .topbar-title { margin: 0; font-size: 18px; color: #2c3e50; font-weight: 600; }
-      .danger-btn { background-color: #dc3545; width: auto; padding: 8px 15px; margin: 0; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
-      .danger-btn:hover { background-color: #c82333; }
-      .content-container { padding: 25px; max-width: 1200px; margin: 0 auto; width: 100%; box-sizing: border-box; }
-      .dashboard-view { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); animation: fadeIn 0.4s ease-in-out; }
-      @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-      .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 999; }
-      
-      /* --- CHAT CSS --- */
-      .chat-wrapper { display: flex; flex-direction: column; height: 65vh; background: #fff; border-radius: 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; overflow: hidden; }
-      .chat-history { flex: 1; padding: 20px; overflow-y: auto; background: #f8f9fa; display: flex; flex-direction: column; }
-      .chat-msg { display: flex; flex-direction: column; margin-bottom: 15px; max-width: 80%; }
-      .user-msg { align-self: flex-end; align-items: flex-end; }
-      .bot-msg { align-self: flex-start; align-items: flex-start; }
-      .msg-content { padding: 12px 16px; border-radius: 15px; font-size: 15px; line-height: 1.4; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-      .user-msg .msg-content { background: #007bff; color: white; border-bottom-right-radius: 2px; }
-      .bot-msg .msg-content { background: #e9ecef; color: #333; border-bottom-left-radius: 2px; }
-      .msg-label { font-size: 11px; font-weight: bold; margin-bottom: 4px; opacity: 0.8; }
-      
-      .chat-controls { display: flex; padding: 15px; background: white; border-top: 1px solid #eee; gap: 10px; align-items: center; }
-      .chat-controls input { flex-grow: 1; padding: 12px 20px; border: 1px solid #ccc; border-radius: 25px; outline: none; font-size: 15px; }
-      .chat-controls input:focus { border-color: #007bff; }
-      .icon-btn { width: 45px; height: 45px; border-radius: 50%; border: none; font-size: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
-      .mic-btn { background: #28a745; color: white; }
-      .mic-btn.active { background: #dc3545; animation: pulse 1s infinite; }
-      .send-btn { background: #007bff; color: white; }
-      .send-btn:hover { background: #0056b3; }
-      @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-      
-      @media (max-width: 768px) {
-        .sidebar { position: fixed; transform: translateX(-100%); }
-        .sidebar.open { transform: translateX(0); }
-        .menu-toggle { display: block; }
-        .sidebar-overlay.open { display: block; }
-        .content-container { padding: 15px; }
-        .dashboard-view { padding: 0; border: none; box-shadow: none; background: transparent; }
-        .chat-wrapper { height: 75vh; border-radius: 12px; }
-      }
-    </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jarvis Smart Fridge - Jarvis</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
   </head>
   <body>
     <div id="dashboard-wrapper">
-      <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+      <div class="sidebar-overlay" onclick="toggleMenu()"></div>
 
       <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">Jarvis OS</div>
-        <div class="sidebar-menu">
-          <a class="nav-link" href="inventory.html">📦 Inventory</a>
-          <a class="nav-link" href="summary.html">📊 Summary</a>
-          <a class="nav-link" href="guide.html">📖 Guide</a>
-          <a class="nav-link" href="about.html">👨‍💻 About Us</a>
-          <a class="nav-link active" href="jarvis.html">🤖 Jarvis</a>
+        <div class="sidebar-header">
+          <div class="logo-area">
+            <span class="header-text">Jarvis OS</span>
+          </div>
+          <button class="close-btn" onclick="toggleMenu()">×</button>
+        </div>
+        <div class="nav-links">
+          <a class="nav-item" href="inventory.html"
+            ><div class="icon-box">📦</div>
+            <span class="nav-text">Inventory</span></a
+          >
+          <a class="nav-item" href="summary.html"
+            ><div class="icon-box">📊</div>
+            <span class="nav-text">Summary</span></a
+          >
+          <a class="nav-item" href="guide.html"
+            ><div class="icon-box">📖</div>
+            <span class="nav-text">Guide</span></a
+          >
+          <a class="nav-item" href="about.html"
+            ><div class="icon-box">👨‍💻</div>
+            <span class="nav-text">About Us</span></a
+          >
+          <a class="nav-item active" href="jarvis.html"
+            ><div class="icon-box">🤖</div>
+            <span class="nav-text">Jarvis</span></a
+          >
+        </div>
+        <div class="bottom-section" id="logout-section">
+          <a class="nav-item logout-item" onclick="logout()"
+            ><div class="icon-box">🚪</div>
+            <span class="nav-text">Logout</span></a
+          >
         </div>
       </div>
 
       <div class="main-content">
-        <div class="topbar">
-          <div class="topbar-left">
-            <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
-            <h2 class="topbar-title" id="page-title">Jarvis Command Center</h2>
-          </div>
-          <button class="danger-btn" onclick="logout()">Logout</button>
+        <div class="mobile-header">
+          <button class="menu-btn" onclick="toggleMenu()">☰</button>
+          <span class="logo-text">Jarvis OS</span>
         </div>
 
-        <div class="content-container">
-          <div class="dashboard-view">
-            
-            <div class="chat-wrapper">
-              <div class="chat-history" id="chat-history">
-                <div class="chat-msg bot-msg" style="align-self: flex-start;">
-                  <div class="msg-content">
-                    <div class="msg-label" style="color: #666">JARVIS</div>
-                    System online. I am ready for your commands.
-                  </div>
+        <h2 class="page-title">Jarvis Command Center</h2>
+
+        <div class="jarvis-wrapper" style="display: flex">
+          <div class="chat-container">
+            <div class="chat-history" id="chat-history">
+              <div class="chat-msg bot-msg">
+                <img
+                  src="jarvis-icon.jpg"
+                  class="chat-avatar"
+                  onerror="this.style.display = 'none'"
+                />
+                <div class="msg-content">
+                  System online. I am ready for your commands.
                 </div>
               </div>
-
-              <div class="chat-controls">
-                <input type="text" id="chat-input" placeholder="Type your command (e.g. Add two apples)...">
-                <button class="icon-btn mic-btn" id="mic-btn" onclick="startVoice()" title="Speak Command">🎤</button>
-                <button class="icon-btn send-btn" id="send-btn" onclick="sendText()" title="Send">➤</button>
-              </div>
             </div>
-
+            <div class="chat-controls">
+              <input
+                type="text"
+                id="chat-input"
+                placeholder="Type a command (e.g. Add two apples)..."
+              />
+              <button
+                class="icon-btn mic-btn"
+                id="mic-btn"
+                onclick="startVoice()"
+              >
+                🎤
+              </button>
+              <button
+                class="icon-btn send-btn"
+                id="send-btn"
+                onclick="sendText()"
+              >
+                ➤
+              </button>
+            </div>
           </div>
         </div>
 
-        <div style="text-align: center; padding: 20px; color: #7f8c8d; font-size: 14px; margin-top: auto;">Version 4</div>
+        <div
+          style="
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-top: auto;
+          "
+        >
+          Version 4
+        </div>
       </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <script src="jarvis.js"></script> 
-    <script>
-      let currentUser = sessionStorage.getItem("currentUser");
-      if (!currentUser) window.location.href = "login.html";
-
-      function toggleSidebar() { $("#sidebar, .sidebar-overlay").toggleClass("open"); }
-      function logout() { sessionStorage.clear(); window.location.href = "login.html"; }
-    </script>
+    <script src="script.js"></script>
+    <script src="jarvis.js"></script>
   </body>
 </html>
