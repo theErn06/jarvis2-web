@@ -6,10 +6,38 @@
     <title>Jarvis Smart Fridge - Guide</title>
     <link rel="stylesheet" href="style.css" />
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <style>
+      .guide-section-title {
+        color: #e74c3c;
+        font-size: 20px;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 10px;
+        margin-top: 25px;
+        margin-bottom: 15px;
+      }
+      /* SOFTER, CLEANER COMMAND BADGES */
+      .command-badge {
+        background: #f0f4f8;
+        color: #2c3e50;
+        padding: 6px 10px;
+        border-radius: 6px;
+        border: 1px solid #dcdde1;
+        font-family: monospace;
+        font-size: 14px;
+        font-weight: 600;
+        display: inline-block;
+        margin: 4px 0;
+      }
+      .action-word {
+        color: #e74c3c;
+        font-weight: bold;
+      }
+    </style>
   </head>
   <body>
     <div id="dashboard-wrapper">
       <div class="sidebar-overlay" onclick="toggleMenu()"></div>
+      
       <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
           <div class="logo-area">
@@ -19,32 +47,14 @@
           <button class="close-btn" onclick="toggleMenu()">×</button>
         </div>
         <div class="nav-links">
-          <a class="nav-item" href="inventory.html"
-            ><div class="icon-box">📦</div>
-            <span class="nav-text">Inventory</span></a
-          >
-          <a class="nav-item" href="summary.html"
-            ><div class="icon-box">📊</div>
-            <span class="nav-text">Summary</span></a
-          >
-          <a class="nav-item active" href="guide.html"
-            ><div class="icon-box">📖</div>
-            <span class="nav-text">Guide</span></a
-          >
-          <a class="nav-item" href="about.html"
-            ><div class="icon-box">👨‍💻</div>
-            <span class="nav-text">About Us</span></a
-          >
-          <a class="nav-item" href="#" onclick="openJarvisTab(event)"
-            ><div class="icon-box">🤖</div>
-            <span class="nav-text">Jarvis</span></a
-          >
+          <a class="nav-item" href="inventory.html"><div class="icon-box">📦</div><span class="nav-text">Inventory</span></a>
+          <a class="nav-item" href="summary.html"><div class="icon-box">📊</div><span class="nav-text">Summary</span></a>
+          <a class="nav-item active" href="guide.html"><div class="icon-box">📖</div><span class="nav-text">Guide</span></a>
+          <a class="nav-item" href="about.html"><div class="icon-box">👨‍💻</div><span class="nav-text">About Us</span></a>
+          <a class="nav-item" href="#" onclick="openJarvisTab(event)"><div class="icon-box">🤖</div><span class="nav-text">Jarvis</span></a>
         </div>
         <div class="bottom-section" id="logout-section">
-          <a class="nav-item logout-item" onclick="logout()"
-            ><div class="icon-box">🚪</div>
-            <span class="nav-text">Logout</span></a
-          >
+          <a class="nav-item logout-item" onclick="logout()"><div class="icon-box">🚪</div><span class="nav-text">Logout</span></a>
         </div>
       </div>
 
@@ -53,97 +63,115 @@
           <button class="menu-btn" onclick="toggleMenu()">☰</button>
           <span class="logo-text">Jarvis OS</span>
         </div>
-        <div class="content-wrapper animate-fade-in">
+        
+        <div class="content-wrapper animate-fade-in" style="overflow-y: auto;">
           <h2 class="page-title">User Guide</h2>
+          <p style="color: #7f8c8d; margin-bottom: 20px;">Welcome to your Smart Refrigerator Assistant! Here is everything you need to know to master your fridge.</p>
 
+          <h3 class="guide-section-title">🗣️ 1. Talking to the Fridge</h3>
           <div class="card info-card" style="text-align: left">
-            <h3>System Overview</h3>
-            <p style="color: #555; line-height: 1.6">
-              Welcome to the Jarvis Smart Fridge dashboard. This application
-              synchronizes directly with your local smart refrigerator hardware,
-              allowing you to monitor your groceries and track food waste from
-              anywhere.
+            <p style="color: #555; line-height: 1.6; margin-bottom: 15px;">
+              You can talk directly to your physical fridge! Ensure you speak clearly towards the microphone. The Arduino LCD display will show <em>"Listening..."</em> when it is ready for your command.
             </p>
+            <ul class="feature-list">
+              <li>
+                <div class="feature-icon">➕</div>
+                <div class="feature-text">
+                  <h4>Adding Food</h4>
+                  <p>Say: <br><span class="command-badge">"<span class="action-word">Add</span> 2 apples"</span><br>or <span class="command-badge">"Put 1 milk into the fridge"</span></p>
+                </div>
+              </li>
+              <li>
+                <div class="feature-icon">➖</div>
+                <div class="feature-text">
+                  <h4>Removing Food</h4>
+                  <p>Say: <br><span class="command-badge">"<span class="action-word">Remove</span> 3 eggs"</span><br>or <span class="command-badge">"Take out 1 chicken"</span></p>
+                </div>
+              </li>
+              <li>
+                <div class="feature-icon">📋</div>
+                <div class="feature-text">
+                  <h4>Checking Inventory & Reports</h4>
+                  <p>Say: <br><span class="command-badge">"<span class="action-word">List</span> inventory"</span><br>or <span class="command-badge">"Give me a waste <span class="action-word">summary</span>"</span></p>
+                </div>
+              </li>
+            </ul>
           </div>
 
+          <h3 class="guide-section-title">🖥️ 2. Dashboard Navigation</h3>
+          <div class="card info-card" style="text-align: left">
+            <p style="color: #555; line-height: 1.6; margin-bottom: 15px;">
+              Use the sidebar menu (☰) on the left to navigate between different pages of your smart fridge system.
+            </p>
+            <ul class="feature-list">
+              <li>
+                <div class="feature-icon">📦</div>
+                <div class="feature-text">
+                  <h4>Inventory Page</h4>
+                  <p>This is your main hub. View a real-time table of all the food currently inside your fridge. You can easily check quantities, expiration dates, and freshness status.</p>
+                </div>
+              </li>
+              <li>
+                <div class="feature-icon">📊</div>
+                <div class="feature-text">
+                  <h4>Summary Page</h4>
+                  <p>Track your food waste over time. This page provides detailed weekly and monthly reports on expired items, helping you adjust your grocery habits to save money.</p>
+                </div>
+              </li>
+              <li>
+                <div class="feature-icon">👨‍💻</div>
+                <div class="feature-text">
+                  <h4>About Us</h4>
+                  <p>Learn more about the team behind the Jarvis Smart Fridge project and view the technical specifications!</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <h3 class="guide-section-title">📱 3. Jarvis Remote Chat Guide</h3>
           <div class="card info-card" style="text-align: left; border-left: 5px solid #3498db;">
-            <h3 style="color: #2980b9;">How to Connect to Jarvis</h3>
+            <p style="color: #555; line-height: 1.6; margin-bottom: 15px;">
+              Not in the kitchen? You can control your fridge remotely using your phone or laptop.
+            </p>
             <ul class="feature-list">
               <li>
                 <div class="feature-icon">1️⃣</div>
                 <div class="feature-text">
-                  <h4>Open the Jarvis Interface</h4>
-                  <p>Open the sidebar menu (☰) and click or tap the 🤖 <strong>Jarvis</strong> icon at the bottom of the navigation list.</p>
+                  <h4>Find the Jarvis Page</h4>
+                  <p>Open the sidebar menu (☰) and tap the 🤖 <strong>Jarvis</strong> icon at the bottom of the list.</p>
                 </div>
               </li>
               <li>
                 <div class="feature-icon">2️⃣</div>
                 <div class="feature-text">
-                  <h4>Find the IP Address</h4>
-                  <p>If you are accessing the dashboard from your phone, a prompt will ask for an IP address. Look directly at your physical fridge's <strong>Arduino LCD Display</strong>. It will show an IP address (e.g., <code>192.168.1.10</code>). Type this exact sequence of numbers into the prompt.</p>
+                  <h4>Enter the IP Address</h4>
+                  <p>If you are using a mobile phone, a prompt will ask for an IP address. Look directly at your physical fridge's <strong>Arduino LCD Display</strong>. It will show an IP (e.g., <code>192.168.1.10</code>). Type that exact number into your phone to connect.</p>
                 </div>
               </li>
               <li>
                 <div class="feature-icon">3️⃣</div>
                 <div class="feature-text">
-                  <h4>Return to the Dashboard</h4>
-                  <p>When you are finished chatting with Jarvis, simply tap the red <strong>"← Go Back"</strong> button at the top left of the screen. This will safely close the secure direct connection and instantly return you to the main dashboard.</p>
+                  <h4>Send Commands</h4>
+                  <p>Once connected, tap the 🎙️ <strong>Microphone</strong> to speak, or use the ⌨️ <strong>Text Bar</strong> to type commands silently.</p>
+                </div>
+              </li>
+              <li>
+                <div class="feature-icon">4️⃣</div>
+                <div class="feature-text">
+                  <h4>Go Back Safely</h4>
+                  <p>When you are done, tap the red <strong>"← Go Back"</strong> button at the top left of the screen to safely close the connection.</p>
                 </div>
               </li>
             </ul>
           </div>
 
-          <div class="card info-card" style="text-align: left">
-            <h3>Jarvis Chat Controls</h3>
-            <ul class="feature-list">
-              <li>
-                <div class="feature-icon">🎙️</div>
-                <div class="feature-text">
-                  <h4>Voice Commands</h4>
-                  <p>Tap the green microphone icon to activate voice recognition. The icon will pulse red while listening. Speak naturally (e.g., <em>"Add two apples"</em>).</p>
-                </div>
-              </li>
-              <li>
-                <div class="feature-icon">⌨️</div>
-                <div class="feature-text">
-                  <h4>Text Commands</h4>
-                  <p>If you are in a noisy environment, you can type your command directly into the input bar and press the blue Send arrow.</p>
-                </div>
-              </li>
-            </ul>
-          </div>
-
-          <div class="card info-card" style="text-align: left">
-            <h3>Hardware Status</h3>
-            <ul class="feature-list">
-              <li>
-                <div class="feature-icon">🚪</div>
-                <div class="feature-text">
-                  <h4>Smart Door Sensor</h4>
-                  <p>
-                    A physical sensor tracks when the fridge door is opened or
-                    closed. If the door is left open for more than 30 seconds,
-                    Jarvis will audibly warn you to close the fridge to save energy.
-                  </p>
-                </div>
-              </li>
-            </ul>
-          </div>
-
-          <div
-            style="
-              text-align: center;
-              padding: 20px;
-              color: #7f8c8d;
-              font-size: 14px;
-              margin-top: auto;
-            "
-          >
+          <div style="text-align: center; padding: 20px; color: #7f8c8d; font-size: 14px; margin-top: auto;">
             Version 4
           </div>
         </div>
       </div>
     </div>
+
     <script>
       let currentUser = sessionStorage.getItem("currentUser");
       if (!currentUser) window.location.href = "index.html";
@@ -152,27 +180,20 @@
         $("#sidebar").toggleClass("open");
         $(".sidebar-overlay").toggleClass("open");
       }
-      
       function logout() {
         sessionStorage.clear();
         window.location.href = "index.html";
       }
 
-      // --- JARVIS TAB REDIRECT LOGIC ---
       function openJarvisTab(e) {
           e.preventDefault();
           let currentHost = window.location.hostname;
-          
-          // Auto-route if running locally on the PC
           if (currentHost === 'localhost' || currentHost === '127.0.0.1' || /^(192\.168|10\.|172\.)/.test(currentHost)) {
               window.location.href = "jarvis.html";
               return;
           }
-          
-          // Prompt for Mobile/GitHub connection
           let savedIp = localStorage.getItem("jarvis_ip");
           let targetIp = prompt("Jarvis Direct Link:\n\nEnter the IP address shown on the Arduino Display (e.g., 192.168.1.10):", savedIp || "");
-
           if (targetIp) {
               targetIp = targetIp.trim();
               localStorage.setItem("jarvis_ip", targetIp);
