@@ -4,18 +4,32 @@
     <meta charset="UTF-8" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover"
     />
     <title>Jarvis Smart Fridge - Terminal</title>
     <link rel="stylesheet" href="style.css" />
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <style>
+      /* Overrides standard 100vh to use dynamic viewport height for mobile browsers */
+      body,
+      html {
+        height: 100dvh !important;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+      /* Pushes the chat bar up to clear iOS/Android bottom swipe bars */
+      .chat-controls {
+        padding-bottom: max(25px, env(safe-area-inset-bottom)) !important;
+      }
+    </style>
   </head>
   <body style="background: #f0f2f5">
     <div
       style="
         display: flex;
         flex-direction: column;
-        height: 100vh;
+        height: 100%;
         overflow: hidden;
       "
     >
@@ -129,11 +143,10 @@
     <script src="jarvis.js"></script>
     <script>
       function goBack() {
-        // Because the script opened this tab, window.close() will instantly close it
-        // and seamlessly return the user to the original GitHub inventory tab beneath it.
+        // Closes the direct IP tab and returns to the GitHub tab below it
         window.close();
 
-        // Failsafe: If close is blocked by the browser, naturally route back to inventory.
+        // Failsafe redirect if the browser blocks window.close()
         setTimeout(() => {
           window.location.href = "inventory.html";
         }, 150);
